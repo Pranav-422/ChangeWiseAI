@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Member 2 input (from Member 1)",
+  "type": "object",
+  "required": [
+    "planning_week",
+    "materials",
+    "inventory",
+    "demand",
+    "purchase_orders",
+    "suppliers",
+    "supplier_materials",
+    "purchasing_authorizations",
+    "engineering_change"
+  ],
+  "properties": {
+    "scenario_id": {
+      "type": "string"
+    },
+    "planning_week": {
+      "type": "integer",
+      "description": "The current week; windows and lead times are judged against it."
+    },
+    "horizon_weeks": {
+      "type": "integer"
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "material_id",
+          "revision",
+          "unit_cost"
+        ],
+        "properties": {
+          "material_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unit_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "PURCHASING_BLOCKED",
+              "PHASE_OUT"
+            ]
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "inventory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "material_id",
+          "on_hand",
+          "reserved"
+        ],
+        "properties": {
+          "material_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "on_hand": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reserved": {
+            "type": "number",
+            "minimum": 0
+          },
+          "safety_stock": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "demand": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "week",
+          "quantity"
+        ],
+        "properties": {
+          "week": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "purchase_orders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "po_id",
+          "material_id",
+          "supplier_id",
+          "purchasing_group",
+          "quantity",
+          "order_week",
+          "arrival_week",
+          "status",
+          "cancellable",
+          "cancel_deadline_week",
+          "change_deadline_week",
+          "cancellation_fee",
+          "max_reduction_qty",
+          "reduction_lot",
+          "reduction_fee_per_unit",
+          "max_deferral_weeks",
+          "expedite_fee_per_week"
+        ],
+        "properties": {
+          "po_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "material_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supplier_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "purchasing_group": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "order_week": {
+            "type": "integer"
+          },
+          "arrival_week": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "CONFIRMED",
+              "SHIPPED",
+              "RECEIVED",
+              "CANCELLED"
+            ]
+          },
+          "cancellable": {
+            "enum": [
+              0,
+              1,
+              true,
+              false
+            ]
+          },
+          "cancel_deadline_week": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "change_deadline_week": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cancellation_fee": {
+            "type": "number",
+            "minimum": 0
+          },
+          "max_reduction_qty": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reduction_lot": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reduction_fee_per_unit": {
+            "type": "number",
+            "minimum": 0
+          },
+          "max_deferral_weeks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "expedite_fee_per_week": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "suppliers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "supplier_id",
+          "status",
+          "lead_time_weeks",
+          "expedite_available",
+          "expedited_lead_time_weeks",
+          "accepts_reduction"
+        ],
+        "properties": {
+          "supplier_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "APPROVED",
+              "BLOCKED",
+              "UNQUALIFIED"
+            ]
+          },
+          "lead_time_weeks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "expedite_available": {
+            "enum": [
+              0,
+              1,
+              true,
+              false
+            ]
+          },
+          "expedited_lead_time_weeks": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "accepts_reduction": {
+            "enum": [
+              0,
+              1,
+              true,
+              false
+            ]
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "supplier_materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "supplier_id",
+          "material_id",
+          "qualified"
+        ],
+        "properties": {
+          "supplier_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "material_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "qualified": {
+            "enum": [
+              0,
+              1,
+              true,
+              false
+            ]
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "purchasing_authorizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "purchasing_group",
+          "material_id",
+          "supplier_id"
+        ],
+        "properties": {
+          "purchasing_group": {
+            "type": "string",
+            "minLength": 1
+          },
+          "material_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supplier_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "engineering_change": {
+      "type": "object",
+      "required": [
+        "change_id",
+        "old_material_id",
+        "new_material_id",
+        "status",
+        "approval_week",
+        "effective_week",
+        "use_up_end_week",
+        "interchangeable"
+      ],
+      "properties": {
+        "change_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "old_material_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "new_material_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string"
+        },
+        "approval_week": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "effective_week": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "use_up_end_week": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interchangeable": {
+          "enum": [
+            0,
+            1,
+            true,
+            false
+          ]
+        }
+      }
+    },
+    "validation_errors": {
+      "type": "array",
+      "description": "Member 1's findings. Any entry stops planning (rule 7)."
+    }
+  },
+  "$defs": {
+    "simulate_inventory_result": {
+      "description": "Returned by Member 1's simulate_inventory(materials, inventory, demand, purchase_orders, engineering_change), called with keyword arguments. engineering_change also carries consumption_policy: CUTOVER (Rev C only from effective_week) or RUN_OUT (Rev B first until use_up_end_week, then Rev C). The function must not modify its arguments.",
+      "type": "object",
+      "required": [
+        "weekly",
+        "total_shortage",
+        "rev_b_leftover",
+        "rev_c_closing",
+        "average_weekly_demand",
+        "total_excess_value"
+      ],
+      "properties": {
+        "weekly": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "week",
+              "demand",
+              "rev_b_opening",
+              "rev_b_receipts",
+              "rev_b_usage",
+              "rev_b_closing",
+              "rev_c_opening",
+              "rev_c_receipts",
+              "rev_c_usage",
+              "rev_c_closing",
+              "shortage"
+            ],
+            "properties": {
+              "week": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "demand": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_b_opening": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_b_receipts": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_b_usage": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_b_closing": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_c_opening": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_c_receipts": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_c_usage": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rev_c_closing": {
+                "type": "number",
+                "minimum": 0
+              },
+              "shortage": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "total_shortage": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rev_b_leftover": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rev_c_closing": {
+          "type": "number",
+          "minimum": 0
+        },
+        "average_weekly_demand": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_excess_value": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
