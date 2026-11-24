@@ -162,7 +162,7 @@ def test_numerical_parity_with_the_frozen_baseline(pool):
     assert all(found == [] for found in report.values()), report
 
 
-@pytest.mark.parametrize("scenario", ["base", "rev_c_supplier_delay", "excess_rev_b_orders", "blocked_supplier"])
+@pytest.mark.parametrize("scenario", ["base", "rev_c_supplier_delay", "excess_rev_b_orders", "blocked_supplier", "missing_records"])
 def test_api_results_equal_the_frozen_baseline(planned, planner, scenario):
     """The whole way round: PostgreSQL, engines, JSON storage, HTTP."""
     frozen = json.loads((capture_baseline.OUT / f"{scenario}.json").read_text(encoding="utf-8"))
@@ -194,6 +194,15 @@ def test_api_results_equal_the_frozen_baseline(planned, planner, scenario):
     assert inventory["excess_value"] == frozen["simulation"]["excess_value"]
     for row, frozen_row in zip(inventory["weeks"], frozen["simulation"]["weeks"], strict=True):
         assert {k: frozen_row[k] for k in row if k in frozen_row} == row
+
+
+def test_a_date_conflict_stops_before_planning(users):
+    """The ECN says use-up W5, the changed record says W3: the review cannot be confirmed, so nothing is planned."""
+    api = users["ENGINEERING"]
+    doc = api.call("POST", "/ecn/samples", {"change_id": "ECN-001", "scenario": "date_conflict", "sample_id": "ECN-001"})
+    review = api.call("POST", f"/ecn/{doc['document_id']}/extract")
+    assert review["validation"]["validation_status"] == "INVALID"
+    assert api.error("POST", f"/ecn/{review['review_id']}/confirm") == (409, "NOT_READY")
 
 
 def test_a_second_change_has_its_own_dataset(pool, db):

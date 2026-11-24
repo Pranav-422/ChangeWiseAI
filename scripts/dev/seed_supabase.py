@@ -12,7 +12,7 @@ import psycopg
 from scripts.migration import export_sqlite, import_postgres
 from scripts.migration.backup_sources import backup
 
-from .run_local import PASSWORD, USERS
+from .accounts import PASSWORD, USERS
 
 
 def main():

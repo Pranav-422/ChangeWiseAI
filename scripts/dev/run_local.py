@@ -22,10 +22,7 @@ import uvicorn  # noqa: E402
 from psycopg import conninfo  # noqa: E402
 
 from . import local_postgres  # noqa: E402
-
-PASSWORD = "local-test-password"  # test accounts of this local database only
-USERS = {"ADMIN": "admin", "ENGINEERING": "engineering", "PURCHASING": "purchasing", "PRODUCTION_PLANNER": "planner",
-         "QUALITY": "quality", "VIEWER": "viewer"}
+from .accounts import PASSWORD, USERS  # noqa: E402
 
 
 def prepare(name="changewise_dev"):
@@ -66,7 +63,7 @@ def main():
         create(supabase, url), host="localhost", port=54321, log_level="warning")).run, daemon=True).start()
     os.environ.update(DATABASE_URL=url, SUPABASE_URL=supabase, SUPABASE_SECRET_KEY="local",
                       FRONTEND_ORIGIN=os.environ.get("FRONTEND_ORIGIN", "http://localhost:3000"))
-    print(f"Test accounts: {', '.join(n + '@changewise.test' for n in USERS.values())} (password in scripts/dev/run_local.py)")
+    print(f"Test accounts: {', '.join(n + '@changewise.test' for n in USERS.values())} (password in scripts/dev/accounts.py)")
     uvicorn.run("backend.app.main:app", host="localhost", port=8000, log_level="warning")
 
 
