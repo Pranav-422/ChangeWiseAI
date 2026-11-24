@@ -28,9 +28,12 @@ test("ECN to closure, across roles", async ({ page, context }) => {
   });
 
   await test.step("the stored document opens through a short-lived link", async () => {
-    const [popup] = await Promise.all([context.waitForEvent("page"), page.getByRole("button", { name: "Open the document" }).click()]);
-    expect(popup.url()).toContain("token=");
-    await popup.close();
+    // a headless browser may download the PDF instead of showing it, so look at the answer, not at the tab
+    const [answer] = await Promise.all([
+      context.waitForEvent("response", (r) => r.url().includes("/object/sign/") && r.url().includes("token=")),
+      page.getByRole("button", { name: "Open the document" }).click(),
+    ]);
+    expect(answer.status()).toBe(200);
   });
 
   await test.step("the planner runs the optimization", async () => {
