@@ -121,8 +121,19 @@ UNSUPPORTED_SCENARIO_REQUEST. If a needed value is absent or unclear it is NEEDS
 Question: <<<{question}>>>"""
 
 
+_SCHEMA = {"type": "object", "required": ["status", "message", "parameters"], "properties": {
+    "status": {"type": "string", "enum": [OK, UNSUPPORTED, CLARIFY]},
+    "message": {"type": "string"},
+    "parameters": {"type": ["object", "null"], "properties": {
+        "lead_time_delta": {"type": "integer"}, "demand_change_percent": {"type": "number"},
+        "effective_week": {"type": ["integer", "null"]}, "supplier_block": {"type": ["string", "null"]},
+        "po_quantity_change": {"type": ["object", "null"], "properties": {
+            "po_id": {"type": ["string", "null"]}, "revision": {"type": ["string", "null"]},
+            "quantity_delta": {"type": "integer"}}}}}}}
+
+
 def _llm(user_text, provider):
-    reply = provider.complete_json(_PROMPT.format(question=user_text))
+    reply = provider.complete_json(_PROMPT.format(question=user_text), _SCHEMA)
     status = reply.get("status")
     if status in (UNSUPPORTED, CLARIFY):
         return status, str(reply.get("message", "")), None

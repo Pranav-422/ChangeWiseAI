@@ -18,7 +18,8 @@ _IDENTITIES = [("app.ecn_reviews", "rowid"), ("app.planning_runs", "rowid"), ("a
 
 def load(url, content, allow_rejects=False):
     report = {"tables": [], "rejected": []}
-    with psycopg.connect(url) as conn:
+    # the outer transaction makes the per-row ones savepoints
+    with psycopg.connect(url) as conn, conn.transaction() as everything:
         for source, table, target, _ in MAPPING:
             rows = content.get(source, {}).get("rows", {}).get(table, [])
             inserted = 0
@@ -42,8 +43,8 @@ def load(url, content, allow_rejects=False):
                          f"greatest((SELECT coalesce(max({column}), 0) FROM {table}), 1), "
                          f"(SELECT count(*) > 0 FROM {table}))")
         if report["rejected"] and not allow_rejects:
-            conn.rollback()
             report["rolled_back"] = True
+            raise psycopg.Rollback(everything)
     return report
 
 

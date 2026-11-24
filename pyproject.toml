@@ -1,0 +1,7 @@
+[tool.ruff]
+line-length = 140
+target-version = "py312"
+extend-exclude = ["member1", "member2", "member3"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]

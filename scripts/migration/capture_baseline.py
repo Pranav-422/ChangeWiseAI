@@ -74,7 +74,7 @@ def differences(expected, actual, path=""):
             found += differences(expected.get(key), actual.get(key), f"{path}.{key}")
         return found
     if isinstance(expected, list) and isinstance(actual, list) and len(expected) == len(actual):
-        return [d for i, (e, a) in enumerate(zip(expected, actual)) for d in differences(e, a, f"{path}[{i}]")]
+        return [d for i, (e, a) in enumerate(zip(expected, actual, strict=True)) for d in differences(e, a, f"{path}[{i}]")]
     return [] if expected == actual else [f"{path}: {str(expected)[:80]} -> {str(actual)[:80]}"]
 
 

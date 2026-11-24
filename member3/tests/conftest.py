@@ -18,7 +18,7 @@ class FakeProvider(Provider):
     def __init__(self, reply):
         self.reply, self.prompts = reply, []
 
-    def complete_json(self, prompt):
+    def complete_json(self, prompt, schema=None):
         self.prompts.append(prompt)
         if isinstance(self.reply, Exception):
             raise self.reply

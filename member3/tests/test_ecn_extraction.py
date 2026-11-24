@@ -1,10 +1,9 @@
 import io
 import json
-import urllib.error
+from types import SimpleNamespace
 
 import pytest
 
-from member3.ai import provider as provider_module
 from member3.ai.ecn_extractor import (
     FIELDS, OFFLINE, ExtractionFailure, create_ecn_review_record, extract_ecn_fields, extract_pdf_text,
     extract_plain_text,
@@ -115,25 +114,32 @@ def test_demo_mode_without_key():
     assert get_provider() is None
 
 
-def test_gemini_request_and_errors(monkeypatch):
-    seen = {}
+class FakeClient:
+    """Stands in for the SDK client; backend/tests/test_gemini.py runs the real SDK."""
 
-    def answer(request, timeout):
-        seen.update(url=request.full_url, key=request.headers["X-goog-api-key"], timeout=timeout)
-        return io.BytesIO(json.dumps({"candidates": [{"content": {"parts": [{"text": '{"a": 1}'}]}}]}).encode())
-    monkeypatch.setattr(provider_module.urllib.request, "urlopen", answer)
-    gemini = GeminiProvider("secret", "some-model", 5)
-    assert gemini.complete_json("hi") == {"a": 1}
-    assert "some-model" in seen["url"] and "secret" not in seen["url"] and seen["key"] == "secret" and seen["timeout"] == 5
+    def __init__(self, *answers):
+        self.answers, self.calls, self.interactions = list(answers), [], self
 
-    def fail(error):
-        def call(request, timeout):
-            raise error
-        return call
-    for error in (TimeoutError(), urllib.error.URLError("x"), urllib.error.HTTPError("u", 429, "busy", {}, None)):
-        monkeypatch.setattr(provider_module.urllib.request, "urlopen", fail(error))
+    def create(self, **request):
+        self.calls.append(request)
+        answer = self.answers.pop(0)
+        if isinstance(answer, Exception):
+            raise answer
+        return SimpleNamespace(output_text=answer, usage=None)
+
+
+class Busy(Exception):
+    status_code = 503
+
+
+def test_gemini_request_and_errors():
+    client = FakeClient('{"a": 1}')
+    assert GeminiProvider("secret", "some-model", 5, client).complete_json("hi", {"type": "object"}) == {"a": 1}
+    assert client.calls == [{"model": "some-model", "input": "hi", "store": False, "timeout": 5, "response_format": {
+        "type": "text", "mime_type": "application/json", "schema": {"type": "object"}}}]
+    for answers in ([TimeoutError("secret")], [ValueError("secret")], [Busy("secret")], [None]):
         with pytest.raises(ProviderError) as raised:
-            gemini.complete_json("hi")
+            GeminiProvider("secret", "some-model", 5, FakeClient(*answers)).complete_json("hi")
         assert "secret" not in str(raised.value)
 
 

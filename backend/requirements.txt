@@ -1,0 +1,17 @@
+# Production dependencies of the API on Render. Streamlit and plotting stay out of this image.
+fastapi==0.165.0
+uvicorn==0.54.0
+pydantic==2.14.4
+psycopg[binary,pool]==3.3.9
+PyJWT[crypto]==2.15.1
+httpx==0.28.1
+python-multipart==0.0.34
+google-genai==3.6.1
+python-dotenv==1.2.4
+# Member engines
+pandas==3.1.1
+PyYAML==6.0.4
+jsonschema==4.26.0
+pypdf==7.1.1
+ortools==9.15.6755
+PuLP>=2.8,<3

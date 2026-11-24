@@ -69,7 +69,8 @@ def write_report(results, foreign_keys, unprotected, version, chain, parity, whe
     lines += [f"| {r['source']} | {r['target']} | {r['source_rows']} | {r['target_rows']} | {len(r['missing'])} "
               f"| {len(r['different'])} |" for r in results]
     for r in results:
-        lines += [f"* MISSING {r['target']} {m}" for m in r["missing"]] + [f"* DIFFERENT {r['target']} {d}" for d in r["different"]]
+        lines += [f"* MISSING {r['target']} {m}" for m in r["missing"]]
+        lines += [f"* DIFFERENT {r['target']} {d}" for d in r["different"]]
     lines += ["", f"* Foreign keys: {foreign_keys['n']} defined, {foreign_keys['bad']} not validated.",
               f"* Tables without Row Level Security: {', '.join(unprotected) or 'none'}.",
               f"* Audit chain: {'intact' if chain is None else f'broken at event {chain}'}.",
