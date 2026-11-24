@@ -1,0 +1,31 @@
+# All tunable policy for the Member 2 engine. Nothing here is read by an LLM.
+engine_version: "1.1.0"
+
+# "module:function". Member 1's simulator through the bridge.
+simulator: member2.integration.member1_bridge:simulate_inventory
+
+action_space:
+  effective_weeks: [5, 6, 7]
+  max_expedite_weeks: 2       # how far the generator looks; supplier lead time still decides
+  max_deferral_weeks: 2       # how far the generator looks; PO limit still decides
+  max_candidates: 5000        # above this, the solver fallback replaces enumeration
+  include_probe_plans: true   # keep rule-breaking single-action plans as rejected evidence
+
+ranking:
+  top_n: 3
+  skip_redundant_variants: true   # see engine/optimizer.py: mark_redundant
+
+near_tie:
+  percent: 0.05
+  absolute: 5000
+  denominator: lower          # lower | higher of the two E + C values
+
+robustness:
+  lead_time_shocks: [0, 1, 2]
+  demand_shocks: [-0.10, 0.0, 0.10]
+  escalation_threshold: [7, 9]
+
+solver:
+  backend: ortools            # ortools | pulp; the other one is used if this cannot be loaded
+  time_limit_seconds: 60
+  max_solutions: 25           # distinct plans the fallback may request

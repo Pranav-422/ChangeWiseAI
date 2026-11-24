@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Member 2 output (to Member 3)",
+  "type": "object",
+  "required": [
+    "engine_version",
+    "simulator",
+    "scenario_id",
+    "input_hash",
+    "config_hash",
+    "method",
+    "decision",
+    "requires_planner_review",
+    "recommended_plan_id",
+    "recommendations",
+    "ranked_plans",
+    "rejected_plans",
+    "skipped_actions",
+    "near_ties",
+    "escalations",
+    "effective_week_comparison",
+    "counts",
+    "computation_seconds"
+  ],
+  "properties": {
+    "decision": {
+      "enum": [
+        "RECOMMENDED",
+        "ESCALATED",
+        "NO_FEASIBLE_PLAN",
+        "INVALID_DATA"
+      ]
+    },
+    "requires_planner_review": {
+      "type": "boolean"
+    },
+    "method": {
+      "enum": [
+        null,
+        "ENUMERATION",
+        "SOLVER:ortools",
+        "SOLVER:pulp"
+      ]
+    },
+    "recommended_plan_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Leading plan. When requires_planner_review is true it is provisional until the planner decides."
+    },
+    "recommendations": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "plan_id",
+          "rank",
+          "overall_rank",
+          "effective_week",
+          "consumption_policy",
+          "actions",
+          "summary",
+          "shortage_units",
+          "excess_value",
+          "action_cost",
+          "action_cost_breakdown",
+          "secondary_cost",
+          "feasibility",
+          "near_ties",
+          "simulation_reference",
+          "robustness",
+          "weekly"
+        ],
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/action"
+            }
+          },
+          "shortage_units": {
+            "type": "number",
+            "minimum": 0
+          },
+          "excess_value": {
+            "type": "number",
+            "minimum": 0
+          },
+          "action_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "secondary_cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "feasibility": {
+            "const": "FEASIBLE"
+          },
+          "robustness": {
+            "type": "object",
+            "required": [
+              "numerator",
+              "denominator",
+              "ratio",
+              "display",
+              "scenarios"
+            ],
+            "properties": {
+              "scenarios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "scenario_id",
+                    "lead_time_shock",
+                    "demand_shock",
+                    "shortage_units",
+                    "excess_value",
+                    "zero_shortage"
+                  ]
+                }
+              }
+            }
+          },
+          "weekly": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "week",
+                "demand",
+                "rev_b_opening",
+                "rev_b_receipts",
+                "rev_b_usage",
+                "rev_b_closing",
+                "rev_c_opening",
+                "rev_c_receipts",
+                "rev_c_usage",
+                "rev_c_closing",
+                "shortage"
+              ],
+              "properties": {
+                "week": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "demand": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_b_opening": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_b_receipts": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_b_usage": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_b_closing": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_c_opening": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_c_receipts": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_c_usage": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "rev_c_closing": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "shortage": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ranked_plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "plan_id",
+          "rank",
+          "actions",
+          "shortage_units",
+          "secondary_cost",
+          "feasibility"
+        ],
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/action"
+            }
+          }
+        }
+      }
+    },
+    "rejected_plans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "plan_id",
+          "actions",
+          "feasibility",
+          "rejection_reasons"
+        ],
+        "properties": {
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/action"
+            }
+          },
+          "feasibility": {
+            "const": "REJECTED"
+          },
+          "rejection_reasons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/reason"
+            }
+          }
+        }
+      }
+    },
+    "skipped_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "reasons"
+        ],
+        "properties": {
+          "action": {
+            "$ref": "#/$defs/action"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/reason"
+            }
+          }
+        }
+      }
+    },
+    "near_ties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "plan_a",
+          "plan_b",
+          "secondary_cost_a",
+          "secondary_cost_b",
+          "absolute",
+          "percent"
+        ]
+      }
+    },
+    "escalations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "plan_ids",
+          "evidence",
+          "status"
+        ],
+        "properties": {
+          "code": {
+            "enum": [
+              "NEAR_TIE",
+              "RESIDUAL_SHORTAGE",
+              "LOW_ROBUSTNESS",
+              "NO_FEASIBLE_PLAN",
+              "INVALID_DATA"
+            ]
+          }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "combinations",
+        "candidates",
+        "feasible",
+        "rejected"
+      ]
+    },
+    "computation_seconds": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "$defs": {
+    "action": {
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "CONTINUE_REV_B",
+            "SHIFT_EFFECTIVE_WEEK",
+            "REDUCE_REV_B_PO",
+            "CANCEL_REV_B_PO",
+            "DEFER_REV_B_PO",
+            "EXPEDITE_REV_C_PO",
+            "DEFER_REV_C_PO",
+            "ALTERNATE_SUPPLIER",
+            "CREATE_REV_B_PO",
+            "KEEP_PO"
+          ]
+        }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "required": [
+        "rule",
+        "code",
+        "description"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
