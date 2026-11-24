@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Confirmed ECN fields and validation (to Member 1 and planning)",
+  "type": "object",
+  "required": [
+    "fields",
+    "validation"
+  ],
+  "properties": {
+    "fields": {
+      "additionalProperties": false,
+      "description": "The editable part of an ECN. Missing values are None; unknown fields are refused.",
+      "properties": {
+        "change_id": {
+          "anyOf": [
+            {
+              "pattern": "^EC[NRO]-[A-Z0-9-]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Change Id"
+        },
+        "part_number": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z0-9][A-Z0-9-]*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Number"
+        },
+        "old_revision": {
+          "anyOf": [
+            {
+              "pattern": "^([A-Z]{1,2}|\\d{1,2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Old Revision"
+        },
+        "new_revision": {
+          "anyOf": [
+            {
+              "pattern": "^([A-Z]{1,2}|\\d{1,2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "New Revision"
+        },
+        "effective_week": {
+          "anyOf": [
+            {
+              "maximum": 104,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective Week"
+        },
+        "use_up_end_week": {
+          "anyOf": [
+            {
+              "maximum": 104,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Use Up End Week"
+        },
+        "interchangeability": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interchangeability"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "approver": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approver"
+        },
+        "approval_status": {
+          "anyOf": [
+            {
+              "enum": [
+                "APPROVED",
+                "PENDING",
+                "DRAFT",
+                "REJECTED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Approval Status"
+        }
+      },
+      "title": "ECNFields",
+      "type": "object"
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "validation_status",
+        "missing_fields",
+        "validation_errors",
+        "conflicts",
+        "requires_human_review",
+        "ready_for_planning"
+      ],
+      "properties": {
+        "validation_status": {
+          "enum": [
+            "VALID",
+            "INVALID",
+            "INSUFFICIENT_DATA",
+            "NEEDS_REVIEW"
+          ]
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "change_id",
+              "part_number",
+              "old_revision",
+              "new_revision",
+              "effective_week",
+              "use_up_end_week",
+              "interchangeability",
+              "reason",
+              "approver",
+              "approval_status"
+            ]
+          }
+        },
+        "requires_human_review": {
+          "type": "boolean"
+        },
+        "ready_for_planning": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

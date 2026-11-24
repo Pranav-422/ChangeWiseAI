@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Explanation record",
+  "type": "object",
+  "required": [
+    "label",
+    "sections",
+    "draft",
+    "verification",
+    "source",
+    "warning",
+    "facts"
+  ],
+  "properties": {
+    "label": {
+      "enum": [
+        "AI_GENERATED_VERIFIED",
+        "TEMPLATE_GENERATED",
+        "AWAITING_REVIEW"
+      ]
+    },
+    "sections": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "verification": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "status",
+            "failures",
+            "needs_review",
+            "sentences"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "VERIFIED",
+                "AWAITING_REVIEW",
+                "REJECTED"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Stored planning run",
+  "type": "object",
+  "required": [
+    "run_id",
+    "review_id",
+    "scenario_id",
+    "input_hash",
+    "decision",
+    "dataset",
+    "config",
+    "result",
+    "context",
+    "explanation",
+    "created_by",
+    "created_at"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^RUN-"
+    },
+    "result": {
+      "type": "object",
+      "description": "member2/contracts/output_schema.json"
+    },
+    "context": {
+      "type": "object",
+      "required": [
+        "baseline",
+        "exceptions",
+        "bom"
+      ]
+    },
+    "explanation": {
+      "type": "object",
+      "description": "explanation_schema.json"
+    }
+  }
+}

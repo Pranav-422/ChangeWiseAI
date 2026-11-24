@@ -1,0 +1,37 @@
+application:
+  title: ChangeWise AI
+  database: member3/data/app.db        # relative to the repository root; CHANGEWISE_DB overrides it
+
+member1:
+  # See services/member1_adapter.py for the contract. Test double: member3.reference.member1_standin
+  module: member3.integration.member1_module
+
+ai:
+  provider: gemini                     # key of ai.provider.PROVIDERS; used only when its API key is set
+  model: gemini-2.5-flash              # GEMINI_MODEL overrides it
+  timeout_seconds: 30
+  max_document_chars: 40000
+
+what_if:
+  max_lead_time_delta: 12
+  min_demand_change_percent: -90
+  max_demand_change_percent: 200
+
+# Who executes each approved action.
+owners:
+  SHIFT_EFFECTIVE_WEEK: Engineering
+  CONTINUE_REV_B: Quality
+  REDUCE_REV_B_PO: Purchasing
+  CANCEL_REV_B_PO: Purchasing
+  DEFER_REV_B_PO: Purchasing
+  EXPEDITE_REV_C_PO: Purchasing
+  DEFER_REV_C_PO: Purchasing
+  ALTERNATE_SUPPLIER: Purchasing
+
+# Demo roles. Selecting a role in the sidebar is NOT authentication.
+permissions:
+  SUBMIT_ECN: [Planner, Engineering]
+  RUN_PLANNING: [Planner]
+  RUN_WHAT_IF: [Planner, Engineering, Purchasing]
+  DECIDE_PLAN: [Planner]
+  CLOSE_CHANGE: [Planner]
