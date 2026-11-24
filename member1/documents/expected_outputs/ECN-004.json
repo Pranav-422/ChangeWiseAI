@@ -1,0 +1,33 @@
+{
+  "document": "ECN-004.pdf",
+  "category": "complete",
+  "expected": {
+    "change_id": "ECN-004",
+    "part_number": "MAT-201",
+    "old_revision": "Rev A",
+    "new_revision": "Rev B",
+    "effective_week": 10,
+    "use_up_end_week": 9,
+    "interchangeability": false,
+    "reason": "Higher-efficiency IE3 winding",
+    "approver": "Engineering Manager",
+    "approval_status": "Approved"
+  },
+  "field_status": {
+    "change_id": "PRESENT",
+    "part_number": "PRESENT",
+    "old_revision": "PRESENT",
+    "new_revision": "PRESENT",
+    "effective_week": "PRESENT",
+    "use_up_end_week": "PRESENT",
+    "interchangeability": "PRESENT",
+    "reason": "PRESENT",
+    "approver": "PRESENT",
+    "approval_status": "PRESENT"
+  },
+  "missing_fields": [],
+  "ambiguous_fields": [],
+  "conflicts": [],
+  "invalid_fields": [],
+  "requires_human_review": false
+}

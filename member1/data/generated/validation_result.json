@@ -1,0 +1,100 @@
+{
+  "change_id": "ECN-001",
+  "status": "VALID",
+  "ready_for_simulation": true,
+  "results": {
+    "engineering_change": {
+      "scope": "engineering_change",
+      "status": "VALID",
+      "issues": []
+    },
+    "materials": {
+      "scope": "materials",
+      "status": "VALID",
+      "issues": []
+    },
+    "inventory": {
+      "scope": "inventory",
+      "status": "VALID",
+      "issues": []
+    },
+    "bom": {
+      "scope": "bom",
+      "status": "VALID",
+      "issues": []
+    },
+    "purchase_orders": {
+      "scope": "purchase_orders",
+      "status": "VALID",
+      "issues": [
+        {
+          "code": "PO_RESTRICTED_SUPPLIER",
+          "status": "VALID",
+          "severity": "INFO",
+          "record": "PO-005",
+          "description": "Open PO from Blocked supplier S3 (material not affected by this change).",
+          "resolution": "Handle outside this change.",
+          "week": null
+        }
+      ]
+    },
+    "suppliers": {
+      "scope": "suppliers",
+      "status": "VALID",
+      "issues": [
+        {
+          "code": "SUP_RESTRICTED",
+          "status": "VALID",
+          "severity": "INFO",
+          "record": "S3",
+          "description": "Blocked: Blocked: open quality notification QN-4471 (weld porosity)",
+          "resolution": "Do not source from this supplier.",
+          "week": null
+        },
+        {
+          "code": "SUP_RESTRICTED",
+          "status": "VALID",
+          "severity": "INFO",
+          "record": "S4",
+          "description": "Unqualified: Unqualified: PPAP for Rev C bracket not approved",
+          "resolution": "Do not source from this supplier.",
+          "week": null
+        }
+      ]
+    },
+    "cross_checks": {
+      "scope": "cross_checks",
+      "status": "VALID",
+      "issues": []
+    }
+  },
+  "issues": [
+    {
+      "code": "PO_RESTRICTED_SUPPLIER",
+      "status": "VALID",
+      "severity": "INFO",
+      "record": "PO-005",
+      "description": "Open PO from Blocked supplier S3 (material not affected by this change).",
+      "resolution": "Handle outside this change.",
+      "week": null
+    },
+    {
+      "code": "SUP_RESTRICTED",
+      "status": "VALID",
+      "severity": "INFO",
+      "record": "S3",
+      "description": "Blocked: Blocked: open quality notification QN-4471 (weld porosity)",
+      "resolution": "Do not source from this supplier.",
+      "week": null
+    },
+    {
+      "code": "SUP_RESTRICTED",
+      "status": "VALID",
+      "severity": "INFO",
+      "record": "S4",
+      "description": "Unqualified: Unqualified: PPAP for Rev C bracket not approved",
+      "resolution": "Do not source from this supplier.",
+      "week": null
+    }
+  ]
+}

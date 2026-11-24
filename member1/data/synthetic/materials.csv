@@ -1,0 +1,10 @@
+material_id,material_name,description,revision,material_type,material_status,unit_cost,unit_of_measure
+PUMP-001,Pump Assembly,"Centrifugal pump PA-500, finished good",Rev A,FINISHED,Active,12000,EA
+PUMP-002,Compact Pump Assembly,"Centrifugal pump PA-300, finished good",Rev A,FINISHED,Active,9500,EA
+KIT-301,Bracket Service Kit,Field replacement kit (spares),Rev A,KIT,Active,900,EA
+SUB-201,Mounting Sub-Assembly,Motor mounting sub-assembly,Rev A,ASSEMBLY,Active,1500,EA
+MAT-101,Mounting Bracket Rev B,Welded steel mounting bracket,Rev B,COMPONENT,Phase-Out,400,EA
+MAT-102,Mounting Bracket Rev C,"Redesigned bracket, improved durability",Rev C,COMPONENT,Released,450,EA
+MAT-201,Motor 5kW,Induction motor 5 kW,Rev A,COMPONENT,Active,6000,EA
+MAT-202,Impeller,Cast impeller 180 mm,Rev A,COMPONENT,Active,1200,EA
+MAT-203,Hex Bolt M10,"Hex bolt M10 x 40, zinc plated",Rev A,COMPONENT,Active,5,EA

@@ -1,0 +1,35 @@
+{
+  "document": "ECN-007.pdf",
+  "category": "missing_fields",
+  "expected": {
+    "change_id": "ECN-007",
+    "part_number": "MAT-202",
+    "old_revision": "Rev A",
+    "new_revision": "Rev B",
+    "effective_week": 9,
+    "use_up_end_week": 8,
+    "interchangeability": false,
+    "reason": "Revised hub keyway tolerance",
+    "approver": null,
+    "approval_status": "Approved"
+  },
+  "field_status": {
+    "change_id": "PRESENT",
+    "part_number": "PRESENT",
+    "old_revision": "PRESENT",
+    "new_revision": "PRESENT",
+    "effective_week": "PRESENT",
+    "use_up_end_week": "PRESENT",
+    "interchangeability": "PRESENT",
+    "reason": "PRESENT",
+    "approver": "MISSING",
+    "approval_status": "PRESENT"
+  },
+  "missing_fields": [
+    "approver"
+  ],
+  "ambiguous_fields": [],
+  "conflicts": [],
+  "invalid_fields": [],
+  "requires_human_review": true
+}

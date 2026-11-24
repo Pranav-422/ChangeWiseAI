@@ -1,0 +1,337 @@
+{
+  "total_documents": 18,
+  "fields_per_document": 10,
+  "category_counts": {
+    "complete": 5,
+    "missing_fields": 4,
+    "ambiguous_fields": 4,
+    "incorrect_dates": 3,
+    "conflicting_revisions": 2
+  },
+  "documents": [
+    {
+      "document": "ECN-001.pdf",
+      "expected_output": "expected_outputs/ECN-001.json",
+      "category": "complete",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": false
+    },
+    {
+      "document": "ECN-002.pdf",
+      "expected_output": "expected_outputs/ECN-002.json",
+      "category": "complete",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": false
+    },
+    {
+      "document": "ECN-003.pdf",
+      "expected_output": "expected_outputs/ECN-003.json",
+      "category": "complete",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": false
+    },
+    {
+      "document": "ECN-004.pdf",
+      "expected_output": "expected_outputs/ECN-004.json",
+      "category": "complete",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": false
+    },
+    {
+      "document": "ECN-005.pdf",
+      "expected_output": "expected_outputs/ECN-005.json",
+      "category": "complete",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-006.pdf",
+      "expected_output": "expected_outputs/ECN-006.json",
+      "category": "missing_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "MISSING",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-007.pdf",
+      "expected_output": "expected_outputs/ECN-007.json",
+      "category": "missing_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "MISSING",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-008.pdf",
+      "expected_output": "expected_outputs/ECN-008.json",
+      "category": "missing_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "MISSING",
+        "interchangeability": "MISSING",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-009.pdf",
+      "expected_output": "expected_outputs/ECN-009.json",
+      "category": "missing_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "MISSING",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-010.pdf",
+      "expected_output": "expected_outputs/ECN-010.json",
+      "category": "ambiguous_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "AMBIGUOUS",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-011.pdf",
+      "expected_output": "expected_outputs/ECN-011.json",
+      "category": "ambiguous_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "AMBIGUOUS",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-012.pdf",
+      "expected_output": "expected_outputs/ECN-012.json",
+      "category": "ambiguous_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "AMBIGUOUS",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-013.pdf",
+      "expected_output": "expected_outputs/ECN-013.json",
+      "category": "ambiguous_fields",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "AMBIGUOUS",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-014.pdf",
+      "expected_output": "expected_outputs/ECN-014.json",
+      "category": "incorrect_dates",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "INVALID",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-015.pdf",
+      "expected_output": "expected_outputs/ECN-015.json",
+      "category": "incorrect_dates",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "INVALID",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-016.pdf",
+      "expected_output": "expected_outputs/ECN-016.json",
+      "category": "incorrect_dates",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "PRESENT",
+        "effective_week": "INVALID",
+        "use_up_end_week": "INVALID",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-017.pdf",
+      "expected_output": "expected_outputs/ECN-017.json",
+      "category": "conflicting_revisions",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "CONFLICT",
+        "new_revision": "PRESENT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    },
+    {
+      "document": "ECN-018.pdf",
+      "expected_output": "expected_outputs/ECN-018.json",
+      "category": "conflicting_revisions",
+      "field_status": {
+        "change_id": "PRESENT",
+        "part_number": "PRESENT",
+        "old_revision": "PRESENT",
+        "new_revision": "CONFLICT",
+        "effective_week": "PRESENT",
+        "use_up_end_week": "PRESENT",
+        "interchangeability": "PRESENT",
+        "reason": "PRESENT",
+        "approver": "PRESENT",
+        "approval_status": "PRESENT"
+      },
+      "requires_human_review": true
+    }
+  ]
+}

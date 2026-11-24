@@ -1,0 +1,62 @@
+[
+  {
+    "scenario_id": "BASE",
+    "description": "Base scenario: Rev B -> Rev C, effective W6, use-up end W5.",
+    "simulation_id": "SIM-092d8859f17b",
+    "validation_status": "VALID",
+    "total_shortage_units": 0,
+    "first_shortage_week": null,
+    "excess_value": 92000.0,
+    "top_exception": "EXC-REV_B_SCRAP_RISK-MAT-101-W5"
+  },
+  {
+    "scenario_id": "REV_C_SUPPLIER_DELAY",
+    "description": "Rev C PO-003 arrives two weeks late (W8).",
+    "simulation_id": "SIM-bb023619bc83",
+    "validation_status": "VALID",
+    "total_shortage_units": 300,
+    "first_shortage_week": 6,
+    "excess_value": 92000.0,
+    "top_exception": "EXC-PRODUCTION_SHORTAGE-MAT-102-W6"
+  },
+  {
+    "scenario_id": "EXCESS_REV_B_ORDERS",
+    "description": "Rev B PO-002 increased from 100 to 400 units.",
+    "simulation_id": "SIM-f261ceb0f1cd",
+    "validation_status": "VALID",
+    "total_shortage_units": 0,
+    "first_shortage_week": null,
+    "excess_value": 212000.0,
+    "top_exception": "EXC-REV_B_SCRAP_RISK-MAT-101-W5"
+  },
+  {
+    "scenario_id": "BLOCKED_SUPPLIER",
+    "description": "Rev C supplier S2 becomes Blocked (quality hold).",
+    "simulation_id": "SIM-37a362b8362c",
+    "validation_status": "NEEDS_REVIEW",
+    "total_shortage_units": 450,
+    "first_shortage_week": 6,
+    "excess_value": 92000.0,
+    "top_exception": "EXC-PRODUCTION_SHORTAGE-MAT-102-W6"
+  },
+  {
+    "scenario_id": "DATE_CONFLICT",
+    "description": "Rev B use-up end moved to W3 while Rev C stays effective W6 (W4-W5 gap).",
+    "simulation_id": "SIM-c3375f0221e2",
+    "validation_status": "NEEDS_REVIEW",
+    "total_shortage_units": 240,
+    "first_shortage_week": 4,
+    "excess_value": 188000.0,
+    "top_exception": "EXC-PRODUCTION_SHORTAGE-MAT-101-W4"
+  },
+  {
+    "scenario_id": "MISSING_RECORDS",
+    "description": "Rev C inventory record and S2 lead time are missing.",
+    "simulation_id": "SIM-75a2d52695e1",
+    "validation_status": "INSUFFICIENT_DATA",
+    "total_shortage_units": 0,
+    "first_shortage_week": null,
+    "excess_value": 92000.0,
+    "top_exception": "EXC-DATA_INSUFFICIENT-INV_MISSING_FOR_AFFECTED-MAT-102"
+  }
+]
