@@ -1,0 +1,10 @@
+{
+  "ecn_field_extraction_accuracy": {
+    "value": 0.9556,
+    "evidence": "offline-rules, 18 synthetic samples"
+  },
+  "what_if_mapping_accuracy": {
+    "value": 0.9259,
+    "evidence": "offline-rules, 27 synthetic questions"
+  }
+}

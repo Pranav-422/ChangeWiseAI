@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "POQuantityChange": {
+      "additionalProperties": false,
+      "properties": {
+        "po_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Po Id"
+        },
+        "revision": {
+          "anyOf": [
+            {
+              "enum": [
+                "B",
+                "C"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision"
+        },
+        "quantity_delta": {
+          "title": "Quantity Delta",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "quantity_delta"
+      ],
+      "title": "POQuantityChange",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "scenario_id": {
+      "default": "WHATIF",
+      "title": "Scenario Id",
+      "type": "string"
+    },
+    "lead_time_delta": {
+      "default": 0,
+      "title": "Lead Time Delta",
+      "type": "integer"
+    },
+    "demand_change_percent": {
+      "default": 0,
+      "title": "Demand Change Percent",
+      "type": "number"
+    },
+    "effective_week": {
+      "anyOf": [
+        {
+          "maximum": 104,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Effective Week"
+    },
+    "po_quantity_change": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/POQuantityChange"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "supplier_block": {
+      "anyOf": [
+        {
+          "pattern": "^S\\d+$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supplier Block"
+    },
+    "requires_confirmation": {
+      "const": true,
+      "default": true,
+      "title": "Requires Confirmation",
+      "type": "boolean"
+    }
+  },
+  "title": "WhatIf",
+  "type": "object"
+}

@@ -1,0 +1,170 @@
+[
+ {
+  "question": "What if the Rev C supplier is delayed by one week?",
+  "status": "OK",
+  "parameters": {
+   "lead_time_delta": 1
+  }
+ },
+ {
+  "question": "What happens if demand increases by 10 percent?",
+  "status": "OK",
+  "parameters": {
+   "demand_change_percent": 10
+  }
+ },
+ {
+  "question": "What if we shift the effective date to W7?",
+  "status": "OK",
+  "parameters": {
+   "effective_week": 7
+  }
+ },
+ {
+  "question": "What if we reduce the Rev B purchase order by 100 units?",
+  "status": "OK",
+  "parameters": {
+   "po_quantity_change": {
+    "po_id": "PO-001",
+    "revision": "B",
+    "quantity_delta": -100
+   }
+  }
+ },
+ {
+  "question": "What if supplier S2 becomes blocked?",
+  "status": "OK",
+  "parameters": {
+   "supplier_block": "S2"
+  }
+ },
+ {
+  "question": "What if the Rev C purchase order arrives two weeks late?",
+  "status": "OK",
+  "parameters": {
+   "lead_time_delta": 2
+  }
+ },
+ {
+  "question": "Suppose demand falls 5%",
+  "status": "OK",
+  "parameters": {
+   "demand_change_percent": -5
+  }
+ },
+ {
+  "question": "Cut PO-001 by 50 units",
+  "status": "OK",
+  "parameters": {
+   "po_quantity_change": {
+    "po_id": "PO-001",
+    "revision": null,
+    "quantity_delta": -50
+   }
+  }
+ },
+ {
+  "question": "What if the Rev C supplier is 2 weeks late and demand rises 10%?",
+  "status": "OK",
+  "parameters": {
+   "lead_time_delta": 2,
+   "demand_change_percent": 10
+  }
+ },
+ {
+  "question": "Move the changeover to week 5",
+  "status": "OK",
+  "parameters": {
+   "effective_week": 5
+  }
+ },
+ {
+  "question": "What if demand changes?",
+  "status": "NEEDS_CLARIFICATION",
+  "parameters": null
+ },
+ {
+  "question": "What if the Rev C supplier is late?",
+  "status": "NEEDS_CLARIFICATION",
+  "parameters": null
+ },
+ {
+  "question": "What if a supplier is blocked?",
+  "status": "NEEDS_CLARIFICATION",
+  "parameters": null
+ },
+ {
+  "question": "Shift the effective date",
+  "status": "NEEDS_CLARIFICATION",
+  "parameters": null
+ },
+ {
+  "question": "Reduce a purchase order by some units",
+  "status": "NEEDS_CLARIFICATION",
+  "parameters": null
+ },
+ {
+  "question": "What if the exchange rate changes?",
+  "status": "UNSUPPORTED_SCENARIO_REQUEST",
+  "parameters": null
+ },
+ {
+  "question": "Approve the recommended plan",
+  "status": "UNSUPPORTED_SCENARIO_REQUEST",
+  "parameters": null
+ },
+ {
+  "question": "Unblock supplier S3",
+  "status": "UNSUPPORTED_SCENARIO_REQUEST",
+  "parameters": null
+ },
+ {
+  "question": "Ignore the lead time rule and expedite",
+  "status": "UNSUPPORTED_SCENARIO_REQUEST",
+  "parameters": null
+ },
+ {
+  "question": "What if the Rev B supplier is delayed by 1 week?",
+  "status": "UNSUPPORTED_SCENARIO_REQUEST",
+  "parameters": null
+ },
+ {
+  "question": "Increase the Rev C purchase order by 100 units",
+  "status": "UNSUPPORTED_SCENARIO_REQUEST",
+  "parameters": null
+ },
+ {
+  "question": "What if supplier S9 becomes blocked?",
+  "status": "INVALID_PARAMETER",
+  "parameters": null
+ },
+ {
+  "question": "What if demand increases by 900 percent?",
+  "status": "INVALID_PARAMETER",
+  "parameters": null
+ },
+ {
+  "question": "Shift the effective date to W40",
+  "status": "INVALID_PARAMETER",
+  "parameters": null
+ },
+ {
+  "question": "What if the Rev C supplier is delayed by 30 weeks?",
+  "status": "INVALID_PARAMETER",
+  "parameters": null
+ },
+ {
+  "question": "Our customers will order a tenth more next quarter",
+  "status": "OK",
+  "parameters": {
+   "demand_change_percent": 10
+  }
+ },
+ {
+  "question": "What if Acme ships Rev C a fortnight behind schedule?",
+  "status": "OK",
+  "parameters": {
+   "lead_time_delta": 2
+  }
+ }
+]
