@@ -1,8 +1,10 @@
 """Migrations, RLS, data migration and numerical parity on real PostgreSQL."""
 import json
+import uuid
 
 import psycopg
 import pytest
+from psycopg import conninfo
 
 from backend.app.core import database
 from backend.app.integrations import member1_postgres
@@ -10,7 +12,7 @@ from member3.services import audit_service
 from member3.services.member1_adapter import Member1Adapter
 from member3.services.member2_adapter import Member2Adapter
 from scripts.dev import local_postgres
-from scripts.migration import capture_baseline, common, import_postgres, verify_migration
+from scripts.migration import apply_migrations, capture_baseline, common, import_postgres, verify_migration
 
 from .conftest import ROLES, add_user, source_rows
 
@@ -96,6 +98,20 @@ def test_constraints_survive_the_conversion(db):
                 "UPDATE core.engineering_changes SET new_material_id = part_number"):
         with pytest.raises(psycopg.IntegrityError):
             db.execute(sql)
+
+
+def test_migrations_apply_once_and_are_recorded():
+    server = local_postgres.server_url()
+    name = f"cw_{uuid.uuid4().hex[:10]}"
+    with psycopg.connect(server, autocommit=True) as conn:
+        conn.execute(f'CREATE DATABASE "{name}"')
+    url = conninfo.make_conninfo(server, dbname=name)
+    with psycopg.connect(url) as conn:
+        conn.execute((local_postgres.ROOT / "supabase" / "tests" / "local_stub.sql").read_text(encoding="utf-8"))
+    assert len(apply_migrations.apply(url)) == 5
+    assert apply_migrations.apply(url) == []
+    with psycopg.connect(url) as conn:
+        assert conn.execute("SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY 1 LIMIT 1").fetchone()             == ("20261124000100", "core_schema")
 
 
 def test_import_is_repeatable(url):

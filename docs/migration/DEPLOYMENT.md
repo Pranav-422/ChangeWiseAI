@@ -6,28 +6,27 @@ No secret belongs in this repository, in Vercel, or in a chat.
 ## 1. Supabase
 
 1. Create a project at https://supabase.com/dashboard, region Singapore (the Render blueprint uses the same). Keep the database password.
-2. Apply the migrations from the repository root:
+2. Connect > Session pooler: copy the connection string (port 5432, user `postgres.<ref>`). It works over IPv4, which Render needs on
+   the Free plan. Percent-encode special characters of the password. Put it in a private PowerShell window, never in a chat or a file:
 
    ```powershell
-   npx supabase@3.4.0 login
+   $env:DATABASE_URL = Read-Host "Session pooler string"
    ```
+
+   On the computer where Application Control blocks native files, also run this once in the same window:
 
    ```powershell
-   npx supabase@3.4.0 link --project-ref <project-ref>
+   $env:PATH = "$PWD\.venv\Lib\site-packages\pixeltable_pgserver\pginstallin;$env:PATH"
    ```
 
-   ```powershell
-   npx supabase@3.4.0 db push
-   ```
-
+3. Apply the migrations. Where the Supabase CLI runs, `supabase link` and `supabase db push` do the same; on that computer it is blocked.
    `supabase/config.toml` is for the local stack. Do not run `supabase config push`.
-3. Connect > Session pooler: copy the connection string (port 5432, user `postgres.<ref>`). It works over IPv4, which Render needs on
-   the Free plan. Percent-encode special characters of the password.
-4. Load and verify the data. The sources are only read.
 
    ```powershell
-   $env:DATABASE_URL = "<session pooler string>"
+   .venv\Scripts\python -m scripts.migration.apply_migrations
    ```
+
+4. Load and verify the data. The sources are only read.
 
    ```powershell
    .venv\Scripts\python -m scripts.migration.export_sqlite
@@ -40,9 +39,6 @@ No secret belongs in this repository, in Vercel, or in a chat.
    ```powershell
    .venv\Scripts\python -m scripts.migration.verify_migration backups\<time>\export.json --where "Supabase project"
    ```
-
-   On the computer where Application Control blocks `psycopg_binary`, first put the embedded server's libraries on the path:
-   `$env:PATH = "$PWD\.venv\Lib\site-packages\pixeltable_pgserver\pginstall\bin;$env:PATH"`.
 5. Authentication > Providers > Email: on, confirm email on, minimum password length 8.
 6. Project Settings > API keys: note the publishable key and a secret key. Settings > JWT keys must show an asymmetric key (ES256), which
    is the default of new projects. The backend refuses HS256 tokens.
@@ -50,7 +46,8 @@ No secret belongs in this repository, in Vercel, or in a chat.
 
 ## 2. Render
 
-1. New > Blueprint, choose the repository and the branch. `render.yaml` defines `changewise-api`. The service root is the repository root.
+1. Open https://dashboard.render.com/blueprint/new?repo=https://github.com/Pranav-422/ChangeWiseAI and choose the branch
+   `migration/vercel-render-supabase-gemini`. `render.yaml` defines `changewise-api`. The service root is the repository root.
 2. Enter the values it asks for:
 
    | Variable | Value |
