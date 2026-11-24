@@ -20,7 +20,8 @@ def facts_for(run, approved=False):
                                  "owners": load_settings()["owners"], "approved": approved, **run["context"]})
 
 
-def run_planning(review_id, member1, member2, user, provider=None):
+def run_planning(review_id, member1, member2, user, provider=None, on_stored=None):
+    """`on_stored(db, run)` runs inside the transaction that stores the run."""
     require(user, "RUN_PLANNING")
     with transaction() as db:
         review = records.get(db, "ecn_reviews", review_id=review_id)
@@ -44,6 +45,8 @@ def run_planning(review_id, member1, member2, user, provider=None):
             "escalations": [e["code"] for e in result["escalations"]],
             "explanation": run["explanation"]["label"],
             "verification": run["explanation"]["verification"]})
+        if on_stored:
+            on_stored(db, run)
     return run["run_id"]
 
 

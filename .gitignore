@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+.vercel/
+test-results/
+playwright-report/
+.dev/
+backups/
+supabase/.temp/
+supabase/.branches/
+*.tsbuildinfo

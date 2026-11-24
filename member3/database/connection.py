@@ -6,10 +6,21 @@ from ..settings import database_path
 from .initialize_db import initialize
 
 _ready = set()
+_replacement = None
+
+
+def use(factory):
+    """Send every `transaction()` to another store (the cloud backend's PostgreSQL). None restores SQLite."""
+    global _replacement
+    _replacement = factory
+
+
+def transaction(path=None):
+    return _replacement() if _replacement and path is None else _sqlite(path)
 
 
 @contextmanager
-def transaction(path=None):
+def _sqlite(path):
     path = path or database_path()
     path.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(path, timeout=10, isolation_level=None)

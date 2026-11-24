@@ -1,0 +1,899 @@
+{
+ "baseline": null,
+ "bom_impact": {
+  "affected_assemblies": [
+   {
+    "assembly": "KIT-301",
+    "assembly_type": "KIT",
+    "path": [
+     "Bracket Service Kit",
+     "Mounting Bracket Rev B"
+    ],
+    "path_ids": [
+     "KIT-301",
+     "MAT-101"
+    ],
+    "quantity_per_assembly": 1.0
+   },
+   {
+    "assembly": "PUMP-001",
+    "assembly_type": "FINISHED",
+    "path": [
+     "Pump Assembly",
+     "Mounting Sub-Assembly",
+     "Mounting Bracket Rev B"
+    ],
+    "path_ids": [
+     "PUMP-001",
+     "SUB-201",
+     "MAT-101"
+    ],
+    "quantity_per_assembly": 1.0
+   },
+   {
+    "assembly": "PUMP-002",
+    "assembly_type": "FINISHED",
+    "path": [
+     "Compact Pump Assembly",
+     "Mounting Sub-Assembly",
+     "Mounting Bracket Rev B"
+    ],
+    "path_ids": [
+     "PUMP-002",
+     "SUB-201",
+     "MAT-101"
+    ],
+    "quantity_per_assembly": 1.0
+   }
+  ],
+  "affected_finished_products": [
+   "KIT-301",
+   "PUMP-001",
+   "PUMP-002"
+  ],
+  "change_id": "ECN-001",
+  "cycles": [],
+  "direct_parents": [
+   "KIT-301",
+   "SUB-201"
+  ],
+  "impact_status": "IDENTIFIED",
+  "indirect_parents": [
+   "PUMP-001",
+   "PUMP-002"
+  ],
+  "material": "MAT-101",
+  "material_name": "Mounting Bracket Rev B",
+  "new_material": "MAT-102",
+  "new_revision": "Rev C",
+  "old_revision": "Rev B"
+ },
+ "configurations": [],
+ "dataset": {
+  "demand": [
+   {
+    "quantity": 80,
+    "week": 1
+   },
+   {
+    "quantity": 100,
+    "week": 2
+   },
+   {
+    "quantity": 100,
+    "week": 3
+   },
+   {
+    "quantity": 120,
+    "week": 4
+   },
+   {
+    "quantity": 120,
+    "week": 5
+   },
+   {
+    "quantity": 150,
+    "week": 6
+   },
+   {
+    "quantity": 150,
+    "week": 7
+   },
+   {
+    "quantity": 150,
+    "week": 8
+   }
+  ],
+  "engineering_change": {
+   "after_effective": "C_THEN_B",
+   "approval_week": 1,
+   "change_id": "ECN-001",
+   "effective_week": 6,
+   "interchangeable": 1,
+   "new_material_id": "MAT-102",
+   "old_material_id": "MAT-101",
+   "run_out_supported": 0,
+   "status": "APPROVED",
+   "use_up_end_week": 3
+  },
+  "horizon_weeks": 8,
+  "inventory": [
+   {
+    "material_id": "MAT-101",
+    "on_hand": 500,
+    "reserved": 50,
+    "safety_stock": 30
+   },
+   {
+    "material_id": "MAT-102",
+    "on_hand": 0,
+    "reserved": 0,
+    "safety_stock": 20
+   }
+  ],
+  "materials": [
+   {
+    "material_id": "MAT-101",
+    "part_number": "MAT-101",
+    "revision": "B",
+    "status": "Phase-Out",
+    "unit_cost": 400.0
+   },
+   {
+    "material_id": "MAT-102",
+    "part_number": "MAT-102",
+    "revision": "C",
+    "status": "Released",
+    "unit_cost": 450.0
+   }
+  ],
+  "planning_week": 1,
+  "purchase_orders": [
+   {
+    "arrival_week": 3,
+    "cancel_deadline_week": 1,
+    "cancellable": 1,
+    "cancellation_fee": 8000.0,
+    "change_deadline_week": 1,
+    "expedite_fee": 0.0,
+    "expedite_fee_per_week": 0,
+    "material_id": "MAT-101",
+    "max_deferral_weeks": 2,
+    "max_reduction_qty": 200,
+    "order_week": -2,
+    "po_id": "PO-001",
+    "purchasing_group": "PG-10",
+    "quantity": 200,
+    "reduction_fee": 5000.0,
+    "reduction_fee_per_unit": 0,
+    "reduction_lot": 50,
+    "status": "OPEN",
+    "supplier_id": "S1"
+   },
+   {
+    "arrival_week": 5,
+    "cancel_deadline_week": 3,
+    "cancellable": 1,
+    "cancellation_fee": 4000.0,
+    "change_deadline_week": 3,
+    "expedite_fee": 0.0,
+    "expedite_fee_per_week": 0,
+    "material_id": "MAT-101",
+    "max_deferral_weeks": 1,
+    "max_reduction_qty": 100,
+    "order_week": 0,
+    "po_id": "PO-002",
+    "purchasing_group": "PG-10",
+    "quantity": 100,
+    "reduction_fee": 2000.0,
+    "reduction_fee_per_unit": 0,
+    "reduction_lot": 50,
+    "status": "OPEN",
+    "supplier_id": "S1"
+   },
+   {
+    "arrival_week": 6,
+    "cancel_deadline_week": 3,
+    "cancellable": 1,
+    "cancellation_fee": 10000.0,
+    "change_deadline_week": 3,
+    "expedite_fee": 12000.0,
+    "expedite_fee_per_week": 0,
+    "material_id": "MAT-102",
+    "max_deferral_weeks": 2,
+    "max_reduction_qty": 200,
+    "order_week": 2,
+    "po_id": "PO-003",
+    "purchasing_group": "PG-10",
+    "quantity": 500,
+    "reduction_fee": 6000.0,
+    "reduction_fee_per_unit": 0,
+    "reduction_lot": 50,
+    "status": "OPEN",
+    "supplier_id": "S2"
+   }
+  ],
+  "purchasing_authorizations": [
+   {
+    "material_id": "MAT-101",
+    "purchasing_group": "PG-10",
+    "supplier_id": "S1"
+   },
+   {
+    "material_id": "MAT-102",
+    "purchasing_group": "PG-10",
+    "supplier_id": "S2"
+   }
+  ],
+  "scenario_id": "date_conflict",
+  "supplier_materials": [
+   {
+    "material_id": "MAT-101",
+    "qualified": 1,
+    "supplier_id": "S1"
+   },
+   {
+    "material_id": "MAT-102",
+    "qualified": 1,
+    "supplier_id": "S2"
+   },
+   {
+    "material_id": "MAT-102",
+    "qualified": 1,
+    "supplier_id": "S3"
+   },
+   {
+    "material_id": "MAT-102",
+    "qualified": 1,
+    "supplier_id": "S4"
+   }
+  ],
+  "suppliers": [
+   {
+    "accepts_reduction": 1,
+    "expedite_available": 0,
+    "expedited_lead_time_weeks": 3,
+    "lead_time_weeks": 3,
+    "status": "APPROVED",
+    "supplier_id": "S1"
+   },
+   {
+    "accepts_reduction": 1,
+    "expedite_available": 1,
+    "expedited_lead_time_weeks": 3,
+    "lead_time_weeks": 4,
+    "status": "APPROVED",
+    "supplier_id": "S2"
+   },
+   {
+    "accepts_reduction": 1,
+    "expedite_available": 0,
+    "expedited_lead_time_weeks": 3,
+    "lead_time_weeks": 3,
+    "status": "BLOCKED",
+    "supplier_id": "S3"
+   },
+   {
+    "accepts_reduction": 1,
+    "expedite_available": 1,
+    "expedited_lead_time_weeks": 1,
+    "lead_time_weeks": 2,
+    "status": "UNQUALIFIED",
+    "supplier_id": "S4"
+   }
+  ],
+  "validation_errors": []
+ },
+ "exceptions": [],
+ "explanation": {
+  "sections": {
+   "Engineering change": "ECN-001 replaces MAT-101 with MAT-102. The effective week is W6 and the use-up end is W3. Finished assemblies affected: KIT-301, PUMP-001, PUMP-002.",
+   "Inventory impact": "Inventory was not simulated.",
+   "Planner decision": "There is nothing to approve.",
+   "Recommendation": "Input records are invalid or conflicting, so no plan was generated. The data owner must correct them.",
+   "Risks": "No critical or high exception was found. Supplier S3 is blocked. Supplier S4 is unqualified."
+  },
+  "verification": {
+   "failures": [],
+   "needs_review": [],
+   "sentences": 10,
+   "status": "VERIFIED"
+  }
+ },
+ "optimization": {
+  "computation_seconds": 0,
+  "config_hash": "4e9a6cb0d00996e208bf8f3ea111f28a08328666551ac6c67ec2a85d1c2f921e",
+  "counts": {
+   "candidates": 0,
+   "combinations": 0,
+   "feasible": 0,
+   "rejected": 0
+  },
+  "decision": "INVALID_DATA",
+  "effective_week_comparison": [],
+  "engine_version": "1.1.0",
+  "escalations": [
+   {
+    "code": "INVALID_DATA",
+    "evidence": [
+     {
+      "code": "DATE_CONFLICT",
+      "description": "No revision is permitted between Rev B use-up end W3 and effective week W6.",
+      "rule": "INPUT_VALIDITY"
+     }
+    ],
+    "message": "Input records are invalid or conflicting; no plan is recommended.",
+    "plan_ids": [],
+    "status": "PLANNER_REVIEW_REQUIRED"
+   }
+  ],
+  "input_hash": "22a8f19ca8e8884e774ccdd816c248ad5632d073ea973d3822d159e007bb1e8e",
+  "method": null,
+  "near_ties": [],
+  "ranked_plans": [],
+  "recommendations": [],
+  "recommended_plan_id": null,
+  "rejected_plans": [],
+  "requires_planner_review": true,
+  "scenario_id": "date_conflict",
+  "simulator": "member2.integration.member1_bridge:simulate_inventory",
+  "skipped_actions": []
+ },
+ "replay_matches": true,
+ "simulation": {
+  "change_id": "ECN-001",
+  "effective_week": 6,
+  "engine_version": "m1-1.1.0",
+  "exceptions": [
+   {
+    "change_id": "ECN-001",
+    "description": "W4: 120 of 120 brackets cannot be supplied.",
+    "exception_id": "EXC-PRODUCTION_SHORTAGE-MAT-101-W4",
+    "exception_type": "PRODUCTION_SHORTAGE",
+    "financial_impact": 240000.0,
+    "material_id": "MAT-101",
+    "owner_role": "Production Planning",
+    "quantity": 120,
+    "recommended_action": "Secure Rev C supply earlier (expedite / approved alternate) or adjust the effective week.",
+    "severity_level": "CRITICAL",
+    "severity_rank": 1,
+    "severity_score": 92.5,
+    "simulation_id": "SIM-c3375f0221e2",
+    "status": "OPEN",
+    "week": 4
+   },
+   {
+    "change_id": "ECN-001",
+    "description": "W5: 120 of 120 brackets cannot be supplied.",
+    "exception_id": "EXC-PRODUCTION_SHORTAGE-MAT-101-W5",
+    "exception_type": "PRODUCTION_SHORTAGE",
+    "financial_impact": 240000.0,
+    "material_id": "MAT-101",
+    "owner_role": "Production Planning",
+    "quantity": 120,
+    "recommended_action": "Secure Rev C supply earlier (expedite / approved alternate) or adjust the effective week.",
+    "severity_level": "CRITICAL",
+    "severity_rank": 2,
+    "severity_score": 90.0,
+    "simulation_id": "SIM-c3375f0221e2",
+    "status": "OPEN",
+    "week": 5
+   },
+   {
+    "change_id": "ECN-001",
+    "description": "470 Rev B units unusable after use-up end W3 (incl. 30 former safety stock, 100 received after use-up end).",
+    "exception_id": "EXC-REV_B_SCRAP_RISK-MAT-101-W3",
+    "exception_type": "REV_B_SCRAP_RISK",
+    "financial_impact": 188000.0,
+    "material_id": "MAT-101",
+    "owner_role": "Materials Management",
+    "quantity": 470,
+    "recommended_action": "Reduce, cancel or defer-and-cancel open Rev B POs; review use-up plan.",
+    "severity_level": "CRITICAL",
+    "severity_rank": 3,
+    "severity_score": 75.0,
+    "simulation_id": "SIM-c3375f0221e2",
+    "status": "OPEN",
+    "week": 3
+   },
+   {
+    "change_id": "ECN-001",
+    "description": "ECN_REVISION_GAP on ECN-001: No revision is permitted in W4-W5: old revision ends W3, new revision starts W6.",
+    "exception_id": "EXC-REVISION_GAP-ECN_REVISION_GAP-ECN-001",
+    "exception_type": "REVISION_GAP",
+    "financial_impact": 0.0,
+    "material_id": null,
+    "owner_role": "Engineering Change Board",
+    "quantity": null,
+    "recommended_action": "Align the Rev B use-up end with the Rev C effective week.",
+    "severity_level": "HIGH",
+    "severity_rank": 4,
+    "severity_score": 70.0,
+    "simulation_id": "SIM-c3375f0221e2",
+    "status": "OPEN",
+    "week": null
+   },
+   {
+    "change_id": "ECN-001",
+    "description": "SIM_NO_PERMITTED_REVISION on ECN-001.W4: W4: Rev B use-up ended W3, Rev C effective W6; 120 units unmet.",
+    "exception_id": "EXC-REVISION_GAP-SIM_NO_PERMITTED_REVISION-ECN-001.W4",
+    "exception_type": "REVISION_GAP",
+    "financial_impact": 0.0,
+    "material_id": null,
+    "owner_role": "Engineering Change Board",
+    "quantity": null,
+    "recommended_action": "Align the Rev B use-up end with the Rev C effective week.",
+    "severity_level": "HIGH",
+    "severity_rank": 5,
+    "severity_score": 62.5,
+    "simulation_id": "SIM-c3375f0221e2",
+    "status": "OPEN",
+    "week": 4
+   },
+   {
+    "change_id": "ECN-001",
+    "description": "SIM_NO_PERMITTED_REVISION on ECN-001.W5: W5: Rev B use-up ended W3, Rev C effective W6; 120 units unmet.",
+    "exception_id": "EXC-REVISION_GAP-SIM_NO_PERMITTED_REVISION-ECN-001.W5",
+    "exception_type": "REVISION_GAP",
+    "financial_impact": 0.0,
+    "material_id": null,
+    "owner_role": "Engineering Change Board",
+    "quantity": null,
+    "recommended_action": "Align the Rev B use-up end with the Rev C effective week.",
+    "severity_level": "HIGH",
+    "severity_rank": 6,
+    "severity_score": 60.0,
+    "simulation_id": "SIM-c3375f0221e2",
+    "status": "OPEN",
+    "week": 5
+   }
+  ],
+  "excess": {
+   "average_weekly_demand": 121.25,
+   "coverage_weeks": 4,
+   "rev_b_leftover_at_use_up_units": 370,
+   "rev_b_post_use_up_receipts": 100,
+   "rev_b_reserved_excluded": 50,
+   "rev_b_scrap_from_safety_stock": 30,
+   "rev_b_scrap_units": 470,
+   "rev_b_scrap_value": 188000.0,
+   "rev_b_unit_cost": 400.0,
+   "rev_c_closing_units": 50,
+   "rev_c_excess_value": 0.0,
+   "rev_c_unit_cost": 450.0,
+   "total_excess_value": 188000.0
+  },
+  "excess_value": 188000.0,
+  "horizon_weeks": 8,
+  "input_snapshot_hash": "c3375f0221e27a6da5dce21ae39beb8a02ede1da5734bf2603cc129b8333ecd4",
+  "issues": [
+   {
+    "code": "ECN_REVISION_GAP",
+    "description": "No revision is permitted in W4-W5: old revision ends W3, new revision starts W6.",
+    "record": "ECN-001",
+    "resolution": "Align the use-up end and effective week.",
+    "severity": "WARNING",
+    "status": "NEEDS_REVIEW",
+    "week": null
+   },
+   {
+    "code": "SIM_NO_PERMITTED_REVISION",
+    "description": "W4: Rev B use-up ended W3, Rev C effective W6; 120 units unmet.",
+    "record": "ECN-001.W4",
+    "resolution": "Align use-up end and effective week.",
+    "severity": "WARNING",
+    "status": "NEEDS_REVIEW",
+    "week": 4
+   },
+   {
+    "code": "SIM_NO_PERMITTED_REVISION",
+    "description": "W5: Rev B use-up ended W3, Rev C effective W6; 120 units unmet.",
+    "record": "ECN-001.W5",
+    "resolution": "Align use-up end and effective week.",
+    "severity": "WARNING",
+    "status": "NEEDS_REVIEW",
+    "week": 5
+   }
+  ],
+  "new_material_id": "MAT-102",
+  "old_material_id": "MAT-101",
+  "parameters": {
+   "average_weekly_demand": null,
+   "demand_multiplier": 1.0,
+   "horizon_weeks": 8,
+   "lead_time_shift": 0,
+   "plant_id": "PUMP-PLANT-01",
+   "scenario_id": "DATE_CONFLICT",
+   "suppliers_checked": true
+  },
+  "receipts": [
+   {
+    "effective_arrival_week": 3,
+    "material_id": "MAT-101",
+    "po_id": "PO-001",
+    "po_status": "Open",
+    "quantity": 200
+   },
+   {
+    "effective_arrival_week": 5,
+    "material_id": "MAT-101",
+    "po_id": "PO-002",
+    "po_status": "Open",
+    "quantity": 100
+   },
+   {
+    "effective_arrival_week": 6,
+    "material_id": "MAT-102",
+    "po_id": "PO-003",
+    "po_status": "Open",
+    "quantity": 500
+   }
+  ],
+  "scenario_id": "DATE_CONFLICT",
+  "shortage": {
+   "affected_materials": [
+    "MAT-101"
+   ],
+   "cost_per_unit_basis": 2000,
+   "estimated_financial_impact": 480000,
+   "first_shortage_week": 4,
+   "shortage_week_list": [
+    4,
+    5
+   ],
+   "shortage_weeks": 2,
+   "total_shortage_units": 240,
+   "weekly_unmet_demand": [
+    {
+     "unmet_demand": 0,
+     "week": 1
+    },
+    {
+     "unmet_demand": 0,
+     "week": 2
+    },
+    {
+     "unmet_demand": 0,
+     "week": 3
+    },
+    {
+     "unmet_demand": 120,
+     "week": 4
+    },
+    {
+     "unmet_demand": 120,
+     "week": 5
+    },
+    {
+     "unmet_demand": 0,
+     "week": 6
+    },
+    {
+     "unmet_demand": 0,
+     "week": 7
+    },
+    {
+     "unmet_demand": 0,
+     "week": 8
+    }
+   ]
+  },
+  "simulation_id": "SIM-c3375f0221e2",
+  "total_shortage_units": 240,
+  "use_up_end_week": 3,
+  "validation_status": "NEEDS_REVIEW",
+  "weeks": [
+   {
+    "applicable_revision": "B",
+    "demand": 80,
+    "rev_b_available": 450,
+    "rev_b_closing": 420,
+    "rev_b_opening": 500,
+    "rev_b_receipts": 0,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 0,
+    "rev_b_usable": 420,
+    "rev_b_usage": 80,
+    "rev_c_available": 0,
+    "rev_c_closing": 0,
+    "rev_c_opening": 0,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 0,
+    "rev_c_usage": 0,
+    "shortage": 0,
+    "week": 1
+   },
+   {
+    "applicable_revision": "B",
+    "demand": 100,
+    "rev_b_available": 370,
+    "rev_b_closing": 320,
+    "rev_b_opening": 420,
+    "rev_b_receipts": 0,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 0,
+    "rev_b_usable": 340,
+    "rev_b_usage": 100,
+    "rev_c_available": 0,
+    "rev_c_closing": 0,
+    "rev_c_opening": 0,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 0,
+    "rev_c_usage": 0,
+    "shortage": 0,
+    "week": 2
+   },
+   {
+    "applicable_revision": "B",
+    "demand": 100,
+    "rev_b_available": 470,
+    "rev_b_closing": 420,
+    "rev_b_opening": 320,
+    "rev_b_receipts": 200,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 0,
+    "rev_b_usable": 440,
+    "rev_b_usage": 100,
+    "rev_c_available": 0,
+    "rev_c_closing": 0,
+    "rev_c_opening": 0,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 0,
+    "rev_c_usage": 0,
+    "shortage": 0,
+    "week": 3
+   },
+   {
+    "applicable_revision": null,
+    "demand": 120,
+    "rev_b_available": 370,
+    "rev_b_closing": 420,
+    "rev_b_opening": 420,
+    "rev_b_receipts": 0,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 120,
+    "rev_b_usable": 340,
+    "rev_b_usage": 0,
+    "rev_c_available": 0,
+    "rev_c_closing": 0,
+    "rev_c_opening": 0,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 0,
+    "rev_c_usage": 0,
+    "shortage": 120,
+    "week": 4
+   },
+   {
+    "applicable_revision": null,
+    "demand": 120,
+    "rev_b_available": 470,
+    "rev_b_closing": 520,
+    "rev_b_opening": 420,
+    "rev_b_receipts": 100,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 120,
+    "rev_b_usable": 440,
+    "rev_b_usage": 0,
+    "rev_c_available": 0,
+    "rev_c_closing": 0,
+    "rev_c_opening": 0,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 0,
+    "rev_c_usage": 0,
+    "shortage": 120,
+    "week": 5
+   },
+   {
+    "applicable_revision": "C",
+    "demand": 150,
+    "rev_b_available": 470,
+    "rev_b_closing": 520,
+    "rev_b_opening": 520,
+    "rev_b_receipts": 0,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 0,
+    "rev_b_usable": 440,
+    "rev_b_usage": 0,
+    "rev_c_available": 500,
+    "rev_c_closing": 350,
+    "rev_c_opening": 0,
+    "rev_c_receipts": 500,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 480,
+    "rev_c_usage": 150,
+    "shortage": 0,
+    "week": 6
+   },
+   {
+    "applicable_revision": "C",
+    "demand": 150,
+    "rev_b_available": 470,
+    "rev_b_closing": 520,
+    "rev_b_opening": 520,
+    "rev_b_receipts": 0,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 0,
+    "rev_b_usable": 440,
+    "rev_b_usage": 0,
+    "rev_c_available": 350,
+    "rev_c_closing": 200,
+    "rev_c_opening": 350,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 330,
+    "rev_c_usage": 150,
+    "shortage": 0,
+    "week": 7
+   },
+   {
+    "applicable_revision": "C",
+    "demand": 150,
+    "rev_b_available": 470,
+    "rev_b_closing": 520,
+    "rev_b_opening": 520,
+    "rev_b_receipts": 0,
+    "rev_b_reserved": 50,
+    "rev_b_safety_stock": 30,
+    "rev_b_unmet": 0,
+    "rev_b_usable": 440,
+    "rev_b_usage": 0,
+    "rev_c_available": 200,
+    "rev_c_closing": 50,
+    "rev_c_opening": 200,
+    "rev_c_receipts": 0,
+    "rev_c_reserved": 0,
+    "rev_c_safety_stock": 20,
+    "rev_c_unmet": 0,
+    "rev_c_usable": 180,
+    "rev_c_usage": 150,
+    "shortage": 0,
+    "week": 8
+   }
+  ]
+ },
+ "validation": {
+  "change_id": "ECN-001",
+  "issues": [
+   {
+    "code": "ECN_REVISION_GAP",
+    "description": "No revision is permitted in W4-W5: old revision ends W3, new revision starts W6.",
+    "record": "ECN-001",
+    "resolution": "Align the use-up end and effective week.",
+    "severity": "WARNING",
+    "status": "NEEDS_REVIEW",
+    "week": null
+   },
+   {
+    "code": "PO_RESTRICTED_SUPPLIER",
+    "description": "Open PO from Blocked supplier S3 (material not affected by this change).",
+    "record": "PO-005",
+    "resolution": "Handle outside this change.",
+    "severity": "INFO",
+    "status": "VALID",
+    "week": null
+   },
+   {
+    "code": "SUP_RESTRICTED",
+    "description": "Blocked: Blocked: open quality notification QN-4471 (weld porosity)",
+    "record": "S3",
+    "resolution": "Do not source from this supplier.",
+    "severity": "INFO",
+    "status": "VALID",
+    "week": null
+   },
+   {
+    "code": "SUP_RESTRICTED",
+    "description": "Unqualified: Unqualified: PPAP for Rev C bracket not approved",
+    "record": "S4",
+    "resolution": "Do not source from this supplier.",
+    "severity": "INFO",
+    "status": "VALID",
+    "week": null
+   }
+  ],
+  "ready_for_simulation": true,
+  "results": {
+   "bom": {
+    "issues": [],
+    "scope": "bom",
+    "status": "VALID"
+   },
+   "cross_checks": {
+    "issues": [],
+    "scope": "cross_checks",
+    "status": "VALID"
+   },
+   "engineering_change": {
+    "issues": [
+     {
+      "code": "ECN_REVISION_GAP",
+      "description": "No revision is permitted in W4-W5: old revision ends W3, new revision starts W6.",
+      "record": "ECN-001",
+      "resolution": "Align the use-up end and effective week.",
+      "severity": "WARNING",
+      "status": "NEEDS_REVIEW",
+      "week": null
+     }
+    ],
+    "scope": "engineering_change",
+    "status": "NEEDS_REVIEW"
+   },
+   "inventory": {
+    "issues": [],
+    "scope": "inventory",
+    "status": "VALID"
+   },
+   "materials": {
+    "issues": [],
+    "scope": "materials",
+    "status": "VALID"
+   },
+   "purchase_orders": {
+    "issues": [
+     {
+      "code": "PO_RESTRICTED_SUPPLIER",
+      "description": "Open PO from Blocked supplier S3 (material not affected by this change).",
+      "record": "PO-005",
+      "resolution": "Handle outside this change.",
+      "severity": "INFO",
+      "status": "VALID",
+      "week": null
+     }
+    ],
+    "scope": "purchase_orders",
+    "status": "VALID"
+   },
+   "suppliers": {
+    "issues": [
+     {
+      "code": "SUP_RESTRICTED",
+      "description": "Blocked: Blocked: open quality notification QN-4471 (weld porosity)",
+      "record": "S3",
+      "resolution": "Do not source from this supplier.",
+      "severity": "INFO",
+      "status": "VALID",
+      "week": null
+     },
+     {
+      "code": "SUP_RESTRICTED",
+      "description": "Unqualified: Unqualified: PPAP for Rev C bracket not approved",
+      "record": "S4",
+      "resolution": "Do not source from this supplier.",
+      "severity": "INFO",
+      "status": "VALID",
+      "week": null
+     }
+    ],
+    "scope": "suppliers",
+    "status": "VALID"
+   }
+  },
+  "status": "NEEDS_REVIEW"
+ }
+}
