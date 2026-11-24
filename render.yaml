@@ -1,0 +1,39 @@
+# Render Blueprint. The repository root is the service root on purpose: the API imports member1, member2 and member3.
+services:
+  - type: web
+    name: changewise-api
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips="*" --no-access-log
+    healthCheckPath: /ready
+    autoDeployTrigger: checksPass
+    buildFilter:
+      paths:
+        - backend/**
+        - member1/**
+        - member2/**
+        - member3/**
+        - render.yaml
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        sync: false

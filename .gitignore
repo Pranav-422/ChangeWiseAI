@@ -15,3 +15,4 @@ backups/
 supabase/.temp/
 supabase/.branches/
 *.tsbuildinfo
+supabase/signing_keys.json
