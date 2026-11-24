@@ -43,6 +43,20 @@ def test_unrelated_blocked_supplier_is_harmless():
     assert check([]) == set()
 
 
+def test_blocked_supplier_of_another_material_is_harmless():
+    def mutate(data):
+        data["purchase_orders"].append({**find_po(data, "PO-003"), "po_id": "PO-900", "material_id": "BOLT",
+                                        "supplier_id": "S3", "arrival_week": 1})
+        data["materials"].append({"material_id": "BOLT", "revision": "A", "unit_cost": 5})
+    assert check([], mutate) == set()
+
+
+def test_effective_week_right_after_use_up_is_consistent():
+    data = base()
+    data["engineering_change"]["effective_week"] = 8
+    assert input_errors(data) == []
+
+
 def test_kept_order_at_blocked_supplier_is_a_purchase():
     assert "BLOCKED_SUPPLIER" in check([], lambda d: supplier(d, "S1").update(status="BLOCKED"))
 
@@ -54,8 +68,6 @@ def test_cancelling_at_blocked_supplier_is_allowed():
 # Rule 2
 def test_rev_b_after_use_up():
     assert "REV_B_AFTER_USE_UP" in check([{"action": "CONTINUE_REV_B", "through_week": 8}])
-    assert "EFFECTIVE_AFTER_USE_UP" in check(
-        [{"action": "SHIFT_EFFECTIVE_WEEK", "from_week": 6, "to_week": 8}])
 
 
 def test_run_out_to_last_week_is_allowed():
@@ -148,7 +160,7 @@ def test_purchasing_group():
     (lambda d: d["demand"].clear(), "MISSING_TABLE"),
     (lambda d: d["demand"].pop(4), "DEMAND_GAP"),
     (lambda d: d["purchase_orders"].append(dict(d["purchase_orders"][0])), "DUPLICATE_RECORD"),
-    (lambda d: d["engineering_change"].update(effective_week=8), "DATE_CONFLICT"),
+    (lambda d: d["engineering_change"].update(effective_week=9), "DATE_CONFLICT"),
     (lambda d: d["engineering_change"].update(status="DRAFT"), "CHANGE_NOT_APPROVED"),
     (lambda d: d["inventory"][0].update(reserved=999), "STOCK_CONFLICT"),
     (lambda d: find_po(d, "PO-003").update(supplier_id="S9"), "UNKNOWN_SUPPLIER"),

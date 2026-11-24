@@ -5,16 +5,19 @@ COVERAGE_WEEKS = 4
 
 
 def calculate_action_cost(actions, data):
-    """C = expedite fees + cancellation fees + reduction fees (per-action breakdown kept)."""
+    """C = expedite fees + cancellation fees + reduction fees (per-action breakdown kept).
+
+    Expedite and reduction fees may be per week / per unit, flat per order, or both.
+    """
     fees = {"expedite": 0, "cancellation": 0, "reduction": 0}
     for action in actions:
         po, name = po_of(action, data), action["action"]
         if name == "EXPEDITE_REV_C_PO":
-            fees["expedite"] += po["expedite_fee_per_week"] * action["weeks"]
+            fees["expedite"] += po["expedite_fee_per_week"] * action["weeks"] + po.get("expedite_fee", 0)
         elif name in ("CANCEL_REV_B_PO", "ALTERNATE_SUPPLIER"):  # resourcing cancels the old order
             fees["cancellation"] += po["cancellation_fee"]
         elif name == "REDUCE_REV_B_PO":
-            fees["reduction"] += po["reduction_fee_per_unit"] * action["quantity"]
+            fees["reduction"] += po["reduction_fee_per_unit"] * action["quantity"] + po.get("reduction_fee", 0)
     return {**fees, "total": sum(fees.values())}
 
 

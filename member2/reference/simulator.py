@@ -1,7 +1,7 @@
-"""TEMPORARY STAND-IN for Member 1's inventory simulator.
+"""TEST DOUBLE for an inventory simulator. Production uses integration/member1_bridge.py.
 
-Member 1 owns inventory arithmetic. This file exists only so Member 2's engine and tests run
-before Member 1's module is merged. Replace it through `simulator:` in config/optimization.yaml.
+Member 1 owns inventory arithmetic. This file keeps Member 2's unit tests small and lets them cover
+the run-out policy, which Member 1's simulator does not have.
 
 Agreed rules (solution plan, section 6): weekly buckets, receipts at the start of the week, stock
 never below zero, unmet demand recorded as shortage and not back-ordered.
@@ -16,7 +16,7 @@ Rev B is never consumed after use_up_end_week.
 COVERAGE_WEEKS = 4
 
 
-def simulate_inventory(materials, inventory, demand, purchase_orders, engineering_change):
+def simulate_inventory(materials, inventory, demand, purchase_orders, engineering_change, suppliers=None):
     unit_cost = {m["material_id"]: m["unit_cost"] for m in materials}
     available = {i["material_id"]: i["on_hand"] - i["reserved"] for i in inventory}
     rev_b, rev_c = engineering_change["old_material_id"], engineering_change["new_material_id"]

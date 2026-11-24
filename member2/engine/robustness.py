@@ -21,7 +21,8 @@ def generate_stress_scenarios(config=None):
 def apply_shock(data, scenario):
     """Shock an isolated scenario copy in place: scale demand, delay undelivered Rev C orders."""
     for row in data["demand"]:
-        row["quantity"] = round(row["quantity"] * (1 + scenario["demand_shock"]))
+        # whole units, rounded half up like Member 1; the inner round removes float noise (115 * 1.1)
+        row["quantity"] = int(round(row["quantity"] * (1 + scenario["demand_shock"]), 6) + 0.5)
     for po in data["purchase_orders"]:
         if (po["material_id"] == data["engineering_change"]["new_material_id"]
                 and po["status"] not in IN_HAND_PO):

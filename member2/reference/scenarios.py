@@ -1,4 +1,4 @@
-"""Synthetic scenarios for development and evaluation (Member 1's dataset replaces them).
+"""Synthetic scenarios for unit tests and seeded escalation cases (Member 1's data is the real input).
 
 base() is the pump-assembly bracket Rev B -> Rev C case from the deck, expressed as input records.
 Every other function changes only what its name says. EXPECTED_ESCALATIONS is derived by hand from

@@ -3,8 +3,9 @@
 Both solvers choose from the same menus as the enumerator (so hard rules hold by construction) and
 encode the same consumption policy as the agreed inventory rules:
   * one changeover option, one option per purchase order;
-  * weekly balance for each revision, stock >= 0, unmet demand is lost;
-  * Rev C is used only when no usable Rev B is left, shortage only when no usable stock is left.
+  * weekly balance for each revision, safety stock is a floor, unmet demand is lost;
+  * each week has an allocation order (for example B, or C then B); the second revision is used only when
+    the first has no usable stock left, and shortage occurs only when neither has any.
 Every returned plan is re-simulated by the planner, so solver arithmetic is never reported.
 """
 from ..engine.action_generator import make_plan
@@ -29,15 +30,22 @@ def build_model_inputs(data, menus):
     weeks = [w for w, _ in demand]
     use_up = change["use_up_end_week"]
 
+    after = change.get("after_effective", "C_ONLY")
+
+    def order(week, start, run_out):
+        if week < start:
+            return "B" if week <= use_up else ""
+        if week > use_up:
+            return "C"
+        if run_out:
+            return "BC"
+        return "CB" if after == "C_THEN_B" and change["interchangeable"] else "C"
+
     changeovers = []
     for actions in menus["changeovers"]:
         plan = make_plan(actions, data)
         start, run_out = plan["effective_week"], plan["consumption_policy"] == "RUN_OUT"
-        changeovers.append({
-            "actions": actions,
-            "b_ok": [w <= use_up and (w < start or run_out) for w in weeks],
-            "c_ok": [w >= start for w in weeks],
-        })
+        changeovers.append({"actions": actions, "order": [order(w, start, run_out) for w in weeks]})
 
     orders = []
     for po in data["purchase_orders"]:
@@ -50,11 +58,16 @@ def build_model_inputs(data, menus):
             options.append({
                 "actions": actions, "quantity": _whole(changed["quantity"], po["po_id"]),
                 "slot": weeks.index(changed["arrival_week"]) if changed["arrival_week"] in weeks else None,
+                # Member 1 scraps Rev B that arrives after use-up, even beyond the horizon.
+                "late_scrap": (changed["quantity"] if changed["arrival_week"] > weeks[-1] and after == "C_THEN_B"
+                               and po["material_id"] == rev_b and changed["status"] != "CANCELLED" else 0),
                 "cost": round(calculate_action_cost(actions, data)["total"] * MONEY_SCALE),
             })
         orders.append({"is_b": po["material_id"] == rev_b, "options": options})
 
     stock = {i["material_id"]: _whole(i["on_hand"] - i["reserved"], i["material_id"])
+             for i in data["inventory"]}
+    floor = {i["material_id"]: _whole(i.get("safety_stock", 0), i["material_id"]) if after == "C_THEN_B" else 0
              for i in data["inventory"]}
     unit = {m["material_id"]: round(m["unit_cost"] * MONEY_SCALE) for m in data["materials"]}
     total_demand = sum(q for _, q in demand)
@@ -63,6 +76,7 @@ def build_model_inputs(data, menus):
     return {
         "demand": [q for _, q in demand], "changeovers": changeovers, "orders": orders,
         "stock_b": stock[rev_b], "stock_c": stock[rev_c],
+        "floor_b": floor[rev_b], "floor_c": floor[rev_c],
         "unit_b": unit[rev_b], "unit_c": unit[rev_c],
         "horizon": len(weeks),
         "coverage_total": COVERAGE_WEEKS * total_demand,  # = horizon x (4 weeks of average demand)

@@ -1,8 +1,8 @@
 # All tunable policy for the Member 2 engine. Nothing here is read by an LLM.
-engine_version: "1.0.0"
+engine_version: "1.1.0"
 
-# "module:function". Point this at Member 1's simulator when it is merged.
-simulator: member2.reference.simulator:simulate_inventory
+# "module:function". Member 1's simulator through the bridge.
+simulator: member2.integration.member1_bridge:simulate_inventory
 
 action_space:
   effective_weeks: [5, 6, 7]

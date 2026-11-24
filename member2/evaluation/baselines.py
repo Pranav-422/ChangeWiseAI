@@ -42,6 +42,16 @@ def run_baseline_a(data, simulate, config):
 
 
 def run_baseline_b(data, simulate, config):
-    use_up = data["engineering_change"]["use_up_end_week"]
-    return _run_baseline("BASELINE_B", [{"action": "CONTINUE_REV_B", "through_week": use_up}],
-                         data, simulate, config)
+    change = data["engineering_change"]
+    if change.get("run_out_supported", 1):
+        return _run_baseline("BASELINE_B", [{"action": "CONTINUE_REV_B", "through_week": change["use_up_end_week"]}],
+                             data, simulate, config)
+    # Member 1's simulator fixes the order after the effective week, so running Rev B out means switching
+    # right after its use-up end. When that is the planned week, baselines A and B coincide.
+    week = change["use_up_end_week"] + 1
+    shift = [] if week == change["effective_week"] else [
+        {"action": "SHIFT_EFFECTIVE_WEEK", "from_week": change["effective_week"], "to_week": week}]
+    row = _run_baseline("BASELINE_B", shift, data, simulate, config)
+    row["assumptions"] = [*row["assumptions"][:1],
+                          f"Rev B is used until its use-up end, then Rev C from W{week}; no order is changed."]
+    return row

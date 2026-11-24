@@ -12,19 +12,19 @@ import streamlit as st  # noqa: E402
 from member2.dashboard import evaluation_view, optimization_view, plan_comparison, robustness_view  # noqa: E402
 from member2.engine.pipeline import run_optimization  # noqa: E402
 from member2.evaluation.comparison import compare_configurations  # noqa: E402
-from member2.reference.scenarios import SCENARIOS  # noqa: E402
+from member2.integration import member1_bridge  # noqa: E402
 
 
 @st.cache_data
 def compute(name):
-    data = SCENARIOS[name]()
+    data = member1_bridge.load_dataset(name)
     result = run_optimization(data)
     return result, compare_configurations(data, result=result)
 
 
 st.set_page_config(page_title="ChangeWise optimization", layout="wide")
 st.title("ChangeWise: optimization engine")
-name = st.sidebar.selectbox("Scenario", list(SCENARIOS))
+name = st.sidebar.selectbox("Scenario", member1_bridge.list_scenarios())
 result, rows = compute(name)
 st.sidebar.caption(f"Simulator: `{result['simulator']}`")
 st.sidebar.caption(f"Method: {result['method'] or 'not run'}")

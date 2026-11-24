@@ -23,22 +23,26 @@ def _build(inp):
     for t in range(n):
         use_b, use_c, short, end_b, end_c = (
             model.new_int_var(0, big, f"{name}{t}") for name in ("ub", "uc", "s", "eb", "ec"))
-        c_used, is_short = model.new_bool_var(f"zc{t}"), model.new_bool_var(f"zs{t}")
+        b_used, c_used, is_short = (model.new_bool_var(f"{name}{t}") for name in ("zb", "zc", "zs"))
         model.add(use_b + use_c + short == inp["demand"][t])
         model.add(end_b == stock_b + receipts(t, True) - use_b)
         model.add(end_c == stock_c + receipts(t, False) - use_c)
+        model.add(use_b == 0).only_enforce_if(~b_used)
         model.add(use_c == 0).only_enforce_if(~c_used)
         model.add(short == 0).only_enforce_if(~is_short)
+        model.add(end_b >= inp["floor_b"]).only_enforce_if(b_used)
+        model.add(end_c >= inp["floor_c"]).only_enforce_if(c_used)
+        state = {"B": (use_b, b_used, end_b, inp["floor_b"]), "C": (use_c, c_used, end_c, inp["floor_c"])}
         for k, option in enumerate(inp["changeovers"]):
-            if option["b_ok"][t]:
-                model.add(end_b == 0).only_enforce_if(y[k], c_used)
-                model.add(end_b == 0).only_enforce_if(y[k], is_short)
-            else:
-                model.add(use_b == 0).only_enforce_if(y[k])
-            if option["c_ok"][t]:
-                model.add(end_c == 0).only_enforce_if(y[k], is_short)
-            else:
-                model.add(use_c == 0).only_enforce_if(y[k])
+            allowed = option["order"][t]
+            for rev, (use, _, end, floor) in state.items():
+                if rev in allowed:
+                    model.add(end <= floor).only_enforce_if(y[k], is_short)
+                else:
+                    model.add(use == 0).only_enforce_if(y[k])
+            if len(allowed) == 2:  # the second revision only after the first is used up
+                first, second = state[allowed[0]], state[allowed[1]]
+                model.add(first[2] <= first[3]).only_enforce_if(y[k], second[1])
         shortage.append(short)
         stock_b, stock_c = end_b, end_c
 
@@ -46,7 +50,9 @@ def _build(inp):
     model.add(over >= n * stock_c - inp["coverage_total"])
     fees = sum(opt["cost"] * x[p][o] for p, order in enumerate(inp["orders"])
                for o, opt in enumerate(order["options"]))
-    cost = n * (inp["unit_b"] * stock_b + fees) + inp["unit_c"] * over  # whole expression x horizon
+    late = sum(opt["late_scrap"] * x[p][o] for p, order in enumerate(inp["orders"])
+               for o, opt in enumerate(order["options"]))
+    cost = n * (inp["unit_b"] * (stock_b + late) + fees) + inp["unit_c"] * over  # whole expression x horizon
     count = (sum(len(opt["actions"]) * y[k] for k, opt in enumerate(inp["changeovers"]))
              + sum(len(opt["actions"]) * x[p][o] for p, order in enumerate(inp["orders"])
                    for o, opt in enumerate(order["options"])))

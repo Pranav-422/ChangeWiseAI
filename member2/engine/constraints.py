@@ -74,11 +74,18 @@ def po_supplier_reasons(po, data, supplier_id=None):
     return _supplier_reasons(supplier_id or po["supplier_id"], po["material_id"], data)
 
 
+def affected_orders(data):
+    """Orders of the two materials in this change. Anything else cannot make a plan infeasible."""
+    change = data["engineering_change"]
+    return [po for po in data["purchase_orders"]
+            if po["material_id"] in (change["old_material_id"], change["new_material_id"])]
+
+
 def check_supplier_qualification(plan, data):
     cancelled = {a["po_id"] for a in _actions(plan, "CANCEL_REV_B_PO")}
     moved = {a["po_id"]: a["supplier_id"] for a in _actions(plan, "ALTERNATE_SUPPLIER")}
     found = []
-    for po in data["purchase_orders"]:
+    for po in affected_orders(data):
         if po["po_id"] not in cancelled:
             found += po_supplier_reasons(po, data, moved.get(po["po_id"]))
     for action in _actions(plan, "CREATE_REV_B_PO"):
@@ -94,6 +101,9 @@ def check_rev_b_use_up(plan, data, simulation=None):
     last = change["use_up_end_week"]
     found = []
     for action in _actions(plan, "CONTINUE_REV_B"):
+        if not change.get("run_out_supported", 1):
+            found.append(reason(rule, "RUN_OUT_NOT_SUPPORTED",
+                                "The simulator decides Rev B use after the effective week by itself."))
         if not change["interchangeable"]:
             found.append(reason(rule, "NOT_INTERCHANGEABLE",
                                 "Rev B may not be used after the effective week."))
@@ -101,10 +111,6 @@ def check_rev_b_use_up(plan, data, simulation=None):
             found.append(reason(rule, "REV_B_AFTER_USE_UP",
                                 f"Rev B use in W{action['through_week']} is after use-up end W{last}."))
     for action in _actions(plan, "SHIFT_EFFECTIVE_WEEK"):
-        if action["to_week"] > last:
-            found.append(reason(
-                rule, "EFFECTIVE_AFTER_USE_UP",
-                f"Effective week W{action['to_week']} is after Rev B use-up end W{last}."))
         if action["to_week"] < data["planning_week"]:
             found.append(reason(rule, "EFFECTIVE_IN_PAST",
                                 f"Effective week W{action['to_week']} is before the planning week."))
@@ -135,7 +141,7 @@ def check_supplier_lead_time(plan, data):
     touched = {a["po_id"] for a in _actions(plan, "EXPEDITE_REV_C_PO", "ALTERNATE_SUPPLIER",
                                             "CANCEL_REV_B_PO")}
     deferred = {a["po_id"]: a["weeks"] for a in _actions(plan, "DEFER_REV_B_PO", "DEFER_REV_C_PO")}
-    for po in data["purchase_orders"]:
+    for po in affected_orders(data):
         if po["po_id"] not in touched:
             arrival = po["arrival_week"] + deferred.get(po["po_id"], 0)
             found += po_arrival_reasons({**po, "arrival_week": arrival}, data)
@@ -326,9 +332,9 @@ def input_errors(data):
         for value, count in Counter(row[key] for row in data[table]).items():
             if count > 1:
                 bad("DUPLICATE_RECORD", f"{table} holds {count} rows for {key} {value}.")
-    if change["effective_week"] > change["use_up_end_week"]:
-        bad("DATE_CONFLICT", f"Effective week W{change['effective_week']} is after Rev B use-up end "
-                             f"W{change['use_up_end_week']}.")
+    if change["effective_week"] > change["use_up_end_week"] + 1:
+        bad("DATE_CONFLICT", f"No revision is permitted between Rev B use-up end W{change['use_up_end_week']} and "
+                             f"effective week W{change['effective_week']}.")
     if change["status"] != "APPROVED":
         bad("CHANGE_NOT_APPROVED", f"{change['change_id']} is {change['status']}.")
     weeks = sorted(row["week"] for row in data["demand"])

@@ -7,7 +7,8 @@ from member2.engine.planner import evaluate_candidate_plan
 from member2.reference.scenarios import SCENARIOS, base, find_po
 from member2.reference.simulator import simulate_inventory
 
-CONFIG = load_config()
+# Unit tests use the test double; test_member1_bridge.py and the reports use Member 1's simulator.
+CONFIG = {**load_config(), "simulator": "member2.reference.simulator:simulate_inventory"}
 REDUCE_200 = {"action": "REDUCE_REV_B_PO", "po_id": "PO-001", "quantity": 200}
 REDUCE_50 = {"action": "REDUCE_REV_B_PO", "po_id": "PO-001", "quantity": 50}
 CANCEL = {"action": "CANCEL_REV_B_PO", "po_id": "PO-001"}

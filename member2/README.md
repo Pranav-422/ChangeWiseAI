@@ -1,7 +1,7 @@
 # Member 2: constrained optimization and decision engine
 
-Deterministic Python. No LLM is called and no number is hardcoded. Input comes from Member 1, the
-result goes to Member 3.
+Deterministic Python. No LLM is called and no number is hardcoded. Input and inventory simulation come
+from Member 1 (`member1/`, through `integration/member1_bridge.py`); the result goes to Member 3.
 
 ## Run
 
@@ -26,24 +26,17 @@ member2/.venv/Scripts/python -m streamlit run member2/dashboard/app.py
 
 ## Interfaces
 
-**Member 1** supplies the dataset (`contracts/input_schema.json`; `engine/data_loader.py` reads SQLite
-or JSON) and the simulator:
+**Member 1** supplies data and simulator. `integration/member1_bridge.py` translates names and units in both
+directions and nothing else: `load_dataset(scenario)` gives the dataset of `contracts/input_schema.json`, and
+`simulate_inventory(...)` calls `member1.engine.inventory`. Member 1's blocking validation findings (INVALID,
+INSUFFICIENT_DATA) stop planning; NEEDS_REVIEW does not.
 
-```python
-simulate_inventory(materials, inventory, demand, purchase_orders, engineering_change)  # keyword args
-```
+`reference/` is a **test double** (simulator and seeded scenarios) for unit tests and for escalation cases that
+Member 1's data does not contain. Its reports are in `reports/seeded/`. Every result names the simulator that
+produced it, and the planner rejects a simulator whose excess value does not match the official formula.
 
-The required return fields are under `$defs` in the input schema. `engineering_change` also carries
-`consumption_policy` (`CUTOVER` or `RUN_OUT`). To switch to the real simulator, change one line in
-`config/optimization.yaml`:
-
-```yaml
-simulator: member2.reference.simulator:simulate_inventory   # "module:function"
-```
-
-`reference/` is a **temporary stand-in** (simulator and synthetic scenarios) because Member 1's module
-is not in the repository yet. Every result names the simulator that produced it, and the planner
-rejects a simulator whose excess value does not match the official formula.
+Bridge interpretations to confirm with Member 1: planning week = approval week; `cancel_allowed_until` also
+limits reductions and deferrals; reductions come in steps of 50.
 
 **Member 3** uses:
 
@@ -64,8 +57,9 @@ What-if: change a copy of `data` and call `run_optimization` again. The Streamli
 | --- | --- |
 | Near-tie boundary | Strict `<`; 5% **or** ₹5,000; percentage of the lower E + C; leader against each rival |
 | Redundant variants | A plan that only adds a no-effect action (for example a free deferral) stays ranked but is not recommended and is not a near-tie rival. Switch: `skip_redundant_variants` |
-| Changeover | Either the effective week moves (cutover) or Rev B runs out to its use-up end; not both |
-| Effective week | Must not exceed the use-up end, matching the ECN date rule |
+| Changeover | Either the effective week moves or (only with the test double) Rev B runs out to its use-up end; not both. Member 1's policy after the effective week is Rev C first, then Rev B |
+| Effective week | May be at most one week after the use-up end; a longer gap has no permitted revision and is `INVALID_DATA`. Member 1 reports such a gap as NEEDS_REVIEW |
+| Baseline B on Member 1's data | Switch right after the use-up end. In the base case that is the planned week, so A and B coincide |
 | Blocked supplier | Keeping an undelivered order at a blocked supplier counts as a purchase; shipped orders are exempt |
 | Alternate supplier | Cancels the original order, so its cancellation window and fee apply |
 | Stress lead time | Delays undelivered Rev C orders only |
@@ -74,13 +68,14 @@ What-if: change a copy of `data` and call `run_optimization` again. The Streamli
 
 ## Findings worth discussing
 
-- **Deck P1 is not optimal.** The simulator reproduces P1 / P2 / P3 exactly (₹37,000; ₹1,00,000; 100
-  short), but dropping P1's expedite gives the same stock result for ₹25,000, and the best plan found
-  costs ₹1,250.
-- **The ₹5,000 arm dominates cheap cases.** When good plans cost under ₹5,000 they are all near-ties,
-  so the base case always goes to the planner.
-- **A fragile plan can win quietly.** In `EXCESS_REV_B` the ₹26,000 plan survives 2 of 9 stress runs
-  and the runner-up 9 of 9, but it is not a near-tie, so the official rule does not escalate.
+- **Deck P1's expedite buys nothing.** The test double reproduces P1 / P2 / P3 exactly (₹37,000; ₹1,00,000;
+  100 short); without the expedite P1 costs ₹25,000. On Member 1's data the best plan is the same reduction,
+  PO-001 by 200, without any expedite: ₹17,000 against ₹92,000 for doing nothing.
+- **The base case always goes to the planner.** Several ways to remove 200 Rev B units cost within ₹5,000.
+- **The recommended base plan is fragile.** It survives 2 of 9 stress runs, and so do its near-tie rivals, so the
+  robustness rule does not add an escalation.
+- **A sturdier plan can lose quietly.** In `excess_rev_b_orders` the winner survives 2 of 9 and the next plan 4
+  of 9, but they are not a near-tie, so the official rule stays silent.
 
 ## Known limits
 

@@ -45,7 +45,8 @@ def run_simulation(data, simulation_engine):
     """Call Member 1 and check the answer against the contract and the official excess formula."""
     result = simulation_engine(
         materials=data["materials"], inventory=data["inventory"], demand=data["demand"],
-        purchase_orders=data["purchase_orders"], engineering_change=data["engineering_change"])
+        purchase_orders=data["purchase_orders"], engineering_change=data["engineering_change"],
+        suppliers=data["suppliers"])
     missing = [field for field in _RESULT_FIELDS if field not in result]
     if missing:
         raise SimulatorContractError(f"simulator result lacks {', '.join(missing)}")

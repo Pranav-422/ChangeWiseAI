@@ -47,11 +47,7 @@
             "minimum": 0
           },
           "status": {
-            "enum": [
-              "ACTIVE",
-              "PURCHASING_BLOCKED",
-              "PHASE_OUT"
-            ]
+            "type": "string"
           }
         }
       },
@@ -207,6 +203,16 @@
           "expedite_fee_per_week": {
             "type": "integer",
             "minimum": 0
+          },
+          "expedite_fee": {
+            "type": "number",
+            "minimum": 0,
+            "description": "flat, added to the per-week fee"
+          },
+          "reduction_fee": {
+            "type": "number",
+            "minimum": 0,
+            "description": "flat, added to the per-unit fee"
           }
         }
       }
@@ -366,6 +372,18 @@
             true,
             false
           ]
+        },
+        "after_effective": {
+          "enum": [
+            "C_ONLY",
+            "C_THEN_B"
+          ]
+        },
+        "run_out_supported": {
+          "enum": [
+            0,
+            1
+          ]
         }
       }
     },
@@ -376,7 +394,7 @@
   },
   "$defs": {
     "simulate_inventory_result": {
-      "description": "Returned by Member 1's simulate_inventory(materials, inventory, demand, purchase_orders, engineering_change), called with keyword arguments. engineering_change also carries consumption_policy: CUTOVER (Rev C only from effective_week) or RUN_OUT (Rev B first until use_up_end_week, then Rev C). The function must not modify its arguments.",
+      "description": "Returned by the simulator called as simulate_inventory(materials, inventory, demand, purchase_orders, engineering_change, suppliers) with keyword arguments. integration/member1_bridge.py answers it with Member 1's simulator. engineering_change also carries consumption_policy: CUTOVER or RUN_OUT. The function must not modify its arguments.",
       "type": "object",
       "required": [
         "weekly",

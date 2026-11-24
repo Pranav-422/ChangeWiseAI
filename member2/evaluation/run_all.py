@@ -1,6 +1,9 @@
-"""Run every scenario and write reports/*.md from the actual results.
+"""Run every scenario and write reports from the actual results.
 
-    python -m member2.evaluation.run_all
+    python -m member2.evaluation.run_all [evidence.json]
+
+reports/*_report.md uses Member 1's data and simulator. reports/seeded/*_report.md uses the test double,
+whose scenarios cover escalation cases Member 1's data does not contain.
 """
 import json
 import sys
@@ -10,18 +13,29 @@ from ..engine.config import load_config, load_simulator
 from ..engine.pipeline import replay_matches, run_optimization
 from ..engine.planner import apply_plan_actions, run_simulation
 from ..engine.action_generator import make_plan
-from ..reference.scenarios import EXPECTED_ESCALATIONS, SCENARIOS
+from ..integration import member1_bridge
+from ..reference import scenarios as seeded
+from ..reference.simulator import simulate_inventory as seeded_simulator
 from . import metrics
 from .comparison import compare_configurations
 from .solver_check import check_solver_agreement
 
 REPORTS = Path(__file__).resolve().parents[1] / "reports"
 
+# Hand-derived from Member 1's records: which escalations the official policy requires.
+MEMBER1_ESCALATIONS = {
+    "base": {"NEAR_TIE"},                   # 17,000 (reduce PO-001 by 200) vs 19,000, 20,000, 21,000
+    "rev_c_supplier_delay": {"NEAR_TIE"},   # the same choices plus the 12,000 expedite fee
+    "excess_rev_b_orders": set(),           # 21,000 (cancel PO-002, reduce PO-001 by 100), next 33,000
+    "blocked_supplier": {"NO_FEASIBLE_PLAN"},   # S3 is blocked, S4 unqualified
+    "date_conflict": {"INVALID_DATA"},      # no revision permitted in W4 and W5
+    "missing_records": {"INVALID_DATA"},
+}
 
-def run_evaluation(config=None, simulate=None):
+
+def run_evaluation(datasets, expected, base, config=None, simulate=None):
     config = config or load_config()
     simulate = simulate or load_simulator(config)
-    datasets = {name: build() for name, build in SCENARIOS.items()}
     results = {name: run_optimization(data, config, simulate) for name, data in datasets.items()}
     valid = [n for n, r in results.items() if r["decision"] != "INVALID_DATA"]
     weekly = []
@@ -31,13 +45,13 @@ def run_evaluation(config=None, simulate=None):
             weekly.append(run_simulation(data, simulate)["weekly"])
     agreement = [row for n in valid for row in check_solver_agreement(datasets[n], config, simulate)]
     return {
-        "config": config, "results": results,
+        "config": config, "results": results, "base": base,
         "comparison": {n: compare_configurations(datasets[n], config, simulate, results[n]) for n in valid},
         "solver_rows": agreement,
         "solver_agreement": metrics.solver_agreement(agreement),
         "reconciliation": metrics.inventory_reconciliation(weekly),
         "violations": metrics.hard_rule_violations(results.values()),
-        "routing": metrics.escalation_routing(results.values(), EXPECTED_ESCALATIONS),
+        "routing": metrics.escalation_routing(results.values(), expected),
         "replay": metrics.replay_reproducibility(
             [replay_matches(results[n], datasets[n], config, simulate) for n in results]),
     }
@@ -64,7 +78,7 @@ def _note(evaluation):
 
 
 def optimization_report(ev):
-    base = ev["results"]["BASE"]
+    base = ev["results"][ev["base"]]
     parts = ["# Optimization report", _note(ev), "## Base scenario: top plans",
              f"Decision: **{base['decision']}**. {base['counts']['combinations']} combinations, "
              f"{base['counts']['feasible']} feasible, {base['counts']['rejected']} rejected, "
@@ -133,7 +147,7 @@ def evaluation_report(ev):
                   ["Escalation routing, exact code match", pct(ev["routing"])],
                   ["Engine replay, identical output", pct(ev["replay"])],
                   *[[f"Enumeration = {name}", pct(m)] for name, m in ev["solver_agreement"].items()]]),
-              "Reconciliation checks the simulator named above, so it must be rerun on Member 1's module.",
+              "Reconciliation checks the simulator named above.",
               "## Escalation routing",
               table(["Scenario", "Expected", "Actual", "Correct"],
                     [[r["scenario_id"], ", ".join(r["expected"]) or "none",
@@ -151,14 +165,21 @@ def evaluation_report(ev):
     return "\n\n".join(parts) + "\n"
 
 
-def main(evidence_path=None):
-    evaluation = run_evaluation()
-    if evidence_path:
-        evaluation["evidence"] = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
-    REPORTS.mkdir(exist_ok=True)
+def write_reports(evaluation, directory):
+    directory.mkdir(parents=True, exist_ok=True)
     for name, build in (("optimization", optimization_report), ("robustness", robustness_report),
                         ("evaluation", evaluation_report)):
-        (REPORTS / f"{name}_report.md").write_text(build(evaluation), encoding="utf-8", newline="\n")
+        (directory / f"{name}_report.md").write_text(build(evaluation), encoding="utf-8", newline="\n")
+
+
+def main(evidence_path=None):
+    real = run_evaluation({n: member1_bridge.load_dataset(n) for n in member1_bridge.list_scenarios()},
+                          MEMBER1_ESCALATIONS, "base")
+    if evidence_path:
+        real["evidence"] = json.loads(Path(evidence_path).read_text(encoding="utf-8"))
+    write_reports(real, REPORTS)
+    write_reports(run_evaluation({n: build() for n, build in seeded.SCENARIOS.items()},
+                                 seeded.EXPECTED_ESCALATIONS, "BASE", simulate=seeded_simulator), REPORTS / "seeded")
     print(f"Reports written to {REPORTS}")
 
 

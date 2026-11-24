@@ -23,20 +23,27 @@ def _build(inp):
     for t in range(n):
         use_b, use_c, short, end_b, end_c = (
             pulp.LpVariable(f"{name}{t}", 0, big, cat="Integer") for name in ("ub", "uc", "s", "eb", "ec"))
-        c_used = pulp.LpVariable(f"zc{t}", cat="Binary")
-        is_short = pulp.LpVariable(f"zs{t}", cat="Binary")
-        b_ok = pulp.lpSum(y[k] for k, opt in enumerate(inp["changeovers"]) if opt["b_ok"][t])
-        c_ok = pulp.lpSum(y[k] for k, opt in enumerate(inp["changeovers"]) if opt["c_ok"][t])
+        b_used, c_used, is_short = (pulp.LpVariable(f"{name}{t}", cat="Binary") for name in ("zb", "zc", "zs"))
+
+        def chosen(test):
+            return pulp.lpSum(y[k] for k, opt in enumerate(inp["changeovers"]) if test(opt["order"][t]))
+        b_ok, c_ok = chosen(lambda o: "B" in o), chosen(lambda o: "C" in o)
+        b_first, c_first = chosen(lambda o: o == "BC"), chosen(lambda o: o == "CB")
+        floor_b, floor_c = inp["floor_b"], inp["floor_c"]
         problem += use_b + use_c + short == inp["demand"][t]
         problem += end_b == stock_b + receipts(t, True) - use_b
         problem += end_c == stock_c + receipts(t, False) - use_c
         problem += use_b <= big * b_ok
         problem += use_c <= big * c_ok
+        problem += use_b <= big * b_used
         problem += use_c <= big * c_used
         problem += short <= big * is_short
-        problem += end_b <= big * (1 - c_used) + big * (1 - b_ok)
-        problem += end_b <= big * (1 - is_short) + big * (1 - b_ok)
-        problem += end_c <= big * (1 - is_short) + big * (1 - c_ok)
+        problem += end_b >= floor_b - big * (1 - b_used)
+        problem += end_c >= floor_c - big * (1 - c_used)
+        problem += end_b <= floor_b + big * (1 - c_used) + big * (1 - b_first)
+        problem += end_c <= floor_c + big * (1 - b_used) + big * (1 - c_first)
+        problem += end_b <= floor_b + big * (1 - is_short) + big * (1 - b_ok)
+        problem += end_c <= floor_c + big * (1 - is_short) + big * (1 - c_ok)
         shortage.append(short)
         stock_b, stock_c = end_b, end_c
 
@@ -44,7 +51,9 @@ def _build(inp):
     problem += over >= stock_c - inp["coverage_total"] / n
     fees = pulp.lpSum(opt["cost"] * x[p][o] for p, order in enumerate(inp["orders"])
                       for o, opt in enumerate(order["options"]))
-    cost = (inp["unit_b"] * stock_b + inp["unit_c"] * over + fees) * (1 / MONEY_SCALE)
+    late = pulp.lpSum(opt["late_scrap"] * x[p][o] for p, order in enumerate(inp["orders"])
+                      for o, opt in enumerate(order["options"]))
+    cost = (inp["unit_b"] * (stock_b + late) + inp["unit_c"] * over + fees) * (1 / MONEY_SCALE)
     count = pulp.lpSum([len(opt["actions"]) * y[k] for k, opt in enumerate(inp["changeovers"])]
                        + [len(opt["actions"]) * x[p][o] for p, order in enumerate(inp["orders"])
                           for o, opt in enumerate(order["options"])])
