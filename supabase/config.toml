@@ -39,7 +39,7 @@ minimum_password_length = 8
 signing_keys_path = "./signing_keys.json"
 
 [auth.email]
-enable_signup = true
+enabled = true
 enable_confirmations = false
 
 [auth.rate_limit]
