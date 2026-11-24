@@ -16,7 +16,7 @@ No secret belongs in this repository, in Vercel, or in a chat.
    On the computer where Application Control blocks native files, also run this once in the same window:
 
    ```powershell
-   $env:PATH = "$PWD\.venv\Lib\site-packages\pixeltable_pgserver\pginstallin;$env:PATH"
+   $env:PATH = "$PWD\.venv\Lib\site-packages\pixeltable_pgserver\pginstall\bin;$env:PATH"
    ```
 
 3. Apply the migrations. Where the Supabase CLI runs, `supabase link` and `supabase db push` do the same; on that computer it is blocked.

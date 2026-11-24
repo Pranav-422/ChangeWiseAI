@@ -111,7 +111,8 @@ def test_migrations_apply_once_and_are_recorded():
     assert len(apply_migrations.apply(url)) == 5
     assert apply_migrations.apply(url) == []
     with psycopg.connect(url) as conn:
-        assert conn.execute("SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY 1 LIMIT 1").fetchone()             == ("20261124000100", "core_schema")
+        first = conn.execute("SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY 1 LIMIT 1").fetchone()
+    assert first == ("20261124000100", "core_schema")
 
 
 def test_import_is_repeatable(url):
