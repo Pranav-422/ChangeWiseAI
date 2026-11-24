@@ -11,8 +11,8 @@ _COMPARED = ("shortage_units", "excess_value", "action_cost", "secondary_cost")
 
 
 def apply_parameters(dataset, parameters, member2):
-    """Isolated scenario copy. A Rev C delay also lengthens its suppliers' lead times, so the engine
-    cannot simply expedite the delay away."""
+    """Isolated scenario copy. A Rev C delay also lengthens its suppliers' lead times, so an expedite
+    wins back only the supplier's normal expedite saving, never the whole delay."""
     data = deepcopy(dataset)
     data["scenario_id"] = f"{dataset['scenario_id']}:{parameters['scenario_id']}"
     delay = parameters["lead_time_delta"]
@@ -25,8 +25,6 @@ def apply_parameters(dataset, parameters, member2):
             if supplier["supplier_id"] in sources:
                 supplier["lead_time_weeks"] += delay
                 supplier["expedited_lead_time_weeks"] += delay
-    if parameters["effective_week"]:
-        data["engineering_change"]["effective_week"] = parameters["effective_week"]
     if parameters["supplier_block"]:
         for supplier in data["suppliers"]:
             if supplier["supplier_id"] == parameters["supplier_block"]:
@@ -39,11 +37,12 @@ def _reduction(parameters):
     return change and {"action": "REDUCE_REV_B_PO", "po_id": change["po_id"], "quantity": -change["quantity_delta"]}
 
 
-def _best(result, member2, data, reduction):
-    """Best plan of the scenario; with a requested reduction, the best ranked plan that contains it."""
-    if not reduction:
+def _best(result, member2, data, reduction, week):
+    """Best plan of the scenario, or the best ranked plan that has the requested week and reduction."""
+    if not reduction and not week:
         return result["recommendations"][0] if result["recommendations"] else None
-    plan = next((p for p in result["ranked_plans"] if reduction in p["actions"]), None)
+    plan = next((p for p in result["ranked_plans"] if (not reduction or reduction in p["actions"])
+                 and (not week or p["effective_week"] == week)), None)
     return member2.evaluate(plan["actions"], data) if plan else None
 
 
@@ -62,11 +61,13 @@ def submit_scenario_to_optimizer(parameters, run, member2, user, question=""):
         broken = member2.action_problems(reduction, data)
         if broken:
             return {"status": "HARD_RULE_VIOLATION", "message": " ".join(r["description"] for r in broken)}
-    config = member2.config_for_week(parameters["effective_week"]) if parameters["effective_week"] else None
-    result = member2.optimize(data, config)
-    plan = _best(result, member2, data, reduction)
+    week = parameters["effective_week"]
+    result = member2.optimize(data, member2.config_for_week(week) if week else None)
+    plan = _best(result, member2, data, reduction, week)
+    constrained = bool(reduction or week) and result["decision"] in ("RECOMMENDED", "ESCALATED")
     outcome = {"status": OK, "message": "", "parameters": parameters, "result": result, "plan": plan,
-               "comparison": compare_scenario_results(run["result"], result, plan)}
+               "constrained": constrained,
+               "comparison": compare_scenario_results(run["result"], result, plan, constrained)}
     with transaction() as db:
         records.insert(db, "what_if_requests", request_id=parameters["scenario_id"], run_id=run["run_id"],
                        question=question, parameters=parameters, result=outcome, created_by=user.name,
@@ -77,11 +78,20 @@ def submit_scenario_to_optimizer(parameters, run, member2, user, question=""):
     return outcome
 
 
-def compare_scenario_results(base, alternative, alternative_plan=None):
-    """Side-by-side of two engine outputs. Missing plans stay None instead of becoming zero."""
+def compare_scenario_results(base, alternative, alternative_plan=None, constrained=False):
+    """Side-by-side of two engine outputs. Missing plans stay None instead of becoming zero.
+
+    `constrained`: the alternative is the best plan that contains what the planner asked for, which the
+    engine's own decision does not describe.
+    """
     before = base["recommendations"][0] if base["recommendations"] else None
-    after = alternative_plan or (alternative["recommendations"][0] if alternative["recommendations"] else None)
-    rows = [{"measure": "decision", "base": base["decision"], "alternative": alternative["decision"], "change": None},
+    after = alternative_plan
+    if after is None and not constrained and alternative["recommendations"]:
+        after = alternative["recommendations"][0]
+    decision = alternative["decision"]
+    if constrained:
+        decision = "BEST_PLAN_WITH_REQUEST" if after else "NO_PLAN_WITH_REQUEST"
+    rows = [{"measure": "decision", "base": base["decision"], "alternative": decision, "change": None},
             {"measure": "plan", "base": before and before["summary"], "alternative": after and after["summary"],
              "change": None}]
     for key in _COMPARED:

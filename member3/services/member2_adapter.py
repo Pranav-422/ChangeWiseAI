@@ -23,7 +23,7 @@ class Member2Adapter:
 
     def config_for_week(self, week):
         config = deepcopy(self.config)
-        config["action_space"]["effective_weeks"] = [week]
+        config["action_space"]["effective_weeks"] = [week]  # the planned week always stays available
         return config
 
     def optimize(self, dataset, config=None):

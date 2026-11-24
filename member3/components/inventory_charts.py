@@ -4,12 +4,13 @@ import streamlit as st
 
 from member2.dashboard.charts import CRITICAL, REV_B, REV_C, _layout, weekly_balance
 
-COLUMNS = ("opening", "receipts", "usage", "closing")
+COLUMNS = ("opening", "receipts", "reserved", "available", "safety_stock", "usable", "usage", "closing")
 
 
 def revision_table(weekly, revision):
     prefix = f"rev_{revision.lower()}_"
-    return pd.DataFrame([{"Week": f"W{w['week']}", **{c.title(): w[prefix + c] for c in COLUMNS}} for w in weekly])
+    return pd.DataFrame([{"Week": f"W{w['week']}", **{c.replace("_", " ").capitalize(): w[prefix + c]
+                                                      for c in COLUMNS if prefix + c in w}} for w in weekly])
 
 
 def balance(weekly, title, key):

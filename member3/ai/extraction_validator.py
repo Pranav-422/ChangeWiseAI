@@ -47,8 +47,12 @@ def normalize(field, raw):
         if match:
             return match[1].upper()
     elif field == "interchangeability":
-        if text.lower() in _AFFIRM | _DENY:
-            return text.lower() in _AFFIRM
+        # "Yes - fully interchangeable": the parts before and after the dash must agree.
+        parts = [p for p in re.split(r"\s+[-\u2013]\s+", text.lower()) if p]
+        if parts and all(p in _AFFIRM for p in parts):
+            return True
+        if parts and all(p in _DENY for p in parts):
+            return False
     elif field == "approval_status":
         if text.lower() in _STATUS:
             return _STATUS[text.lower()]
@@ -89,9 +93,9 @@ def validate_extracted_ecn(extracted_data, member1_validate=None, human_confirme
             errors.append({"code": "SAME_REVISION", "field": "new_revision",
                            "message": "Old and new revision are the same."})
         start, end = fields["effective_week"], fields["use_up_end_week"]
-        if start is not None and end is not None and start > end:
+        if start is not None and end is not None and start > end + 1:
             errors.append({"code": "DATE_CONFLICT", "field": "effective_week",
-                           "message": f"Effective week W{start} is after use-up end W{end}."})
+                           "message": f"No revision is permitted between use-up end W{end} and effective week W{start}."})
 
     missing = identify_missing_fields(extracted_data)
     ambiguous = identify_ambiguous_fields(extracted_data)

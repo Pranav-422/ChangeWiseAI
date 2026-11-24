@@ -1,4 +1,5 @@
 """Per-session choices (scenario, user) and the shared context every page starts from."""
+import os
 from typing import Any, NamedTuple, Optional
 
 import streamlit as st
@@ -22,9 +23,13 @@ class Context(NamedTuple):
 
 
 @st.cache_resource
-def adapters():
-    member1 = Member1Adapter()
+def _adapters(module_name):
+    member1 = Member1Adapter(module_name)
     return member1, Member2Adapter(member1.simulate)
+
+
+def adapters():
+    return _adapters(os.environ.get("CHANGEWISE_MEMBER1"))
 
 
 def render_sidebar():
@@ -45,7 +50,10 @@ def render_sidebar():
 def context():
     member1, member2 = adapters()
     state = st.session_state
-    scenario = state.get("scenario", member1.list_scenarios()[0])
+    scenarios = member1.list_scenarios()
+    scenario = state.get("scenario", scenarios[0])
+    if scenario not in scenarios:
+        scenario = scenarios[0]
     run = planning_service.latest_run(scenario)
     return Context(member1, member2, User(state.get("user_name", "Demo user"), state.get("role", "Planner")),
                    scenario, member1.load_dataset(scenario), run,

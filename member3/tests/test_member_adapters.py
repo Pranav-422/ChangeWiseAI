@@ -9,6 +9,11 @@ from member3.services.member1_adapter import Member1Adapter, Member1ContractErro
 from member3.settings import ROOT
 
 
+def test_production_module_is_member1s():
+    from member3.settings import load_settings
+    assert load_settings()["member1"]["module"] == "member3.integration.member1_module"
+
+
 def test_stand_in_is_declared_synthetic(member1):
     assert member1.synthetic and "standin" in member1.name
 

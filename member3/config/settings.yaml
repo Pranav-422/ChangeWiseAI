@@ -3,8 +3,8 @@ application:
   database: member3/data/app.db        # relative to the repository root; CHANGEWISE_DB overrides it
 
 member1:
-  # Point this at Member 1's module when it is merged. See services/member1_adapter.py for the contract.
-  module: member3.reference.member1_standin
+  # See services/member1_adapter.py for the contract. Test double: member3.reference.member1_standin
+  module: member3.integration.member1_module
 
 ai:
   provider: gemini                     # key of ai.provider.PROVIDERS; used only when its API key is set

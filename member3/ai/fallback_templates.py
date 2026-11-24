@@ -69,8 +69,8 @@ def hard_rule_rejection(facts):
 
 def critical_exceptions(facts):
     top = [e for e in facts["exceptions"] if e["band"] in ("Critical", "High")]
-    return " ".join(f"{e['band']} exception {e['exception_id']} in W{e['week']}: {e['type'].replace('_', ' ').lower()}, "
-                    f"impact {rupees(e['impact_rs'])}." for e in top) or "No critical or high exception was found."
+    return " ".join(f"{e['band']} exception {e['exception_id']}" + (f" in W{e['week']}" if e["week"] else "")
+                    + f": {e['type'].replace('_', ' ').lower()}, impact {rupees(e['impact_rs'])}." for e in top) or "No critical or high exception was found."
 
 
 def optimization_recommendation(facts):

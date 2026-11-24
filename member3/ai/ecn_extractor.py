@@ -56,7 +56,7 @@ _LABELS = {
     "old_revision": r"(?:old|current|existing|from)\s+rev(?:ision)?\.?",
     "new_revision": r"(?:new|proposed|to)\s+rev(?:ision)?\.?",
     "effective_week": r"effective(?:\s+(?:week|from|in|date))?",
-    "use_up_end_week": r"(?:old\s+stock\s+)?use[- ]?up(?:\s+(?:end|until|by|limit))?(?:\s+week)?",
+    "use_up_end_week": r"(?:old\s+(?:stock|revision)\s+)?use[- ]?up(?:\s+(?:end|until|by|limit))?(?:\s+week)?",
     "interchangeability": r"interchangeab(?:le|ility)",
     "reason": r"reason(?:\s+for\s+change)?",
     "approver": r"(?:approver|approved\s+by)",
@@ -86,6 +86,10 @@ def _offline_candidates(text):
             r"rev(?:ision)?\.?\s*([A-Z])\b\s*(?:->|→|to|with|by)\s*rev(?:ision)?\.?\s*([A-Z])\b", text, re.I):
         found["old_revision"].append({"value": match[1], "quote": match[0]})
         found["new_revision"].append({"value": match[2], "quote": match[0]})
+    for field, verbs in (("old_revision", r"supersedes?|replaces?|obsoletes?"),
+                         ("new_revision", r"introduces?|releases?|approved\s+as|drawing[^\n]*?")):
+        for match in re.finditer(rf"\b(?:{verbs})\s+rev(?:ision)?\.?\s*([A-Z])\b", text, re.I):
+            found[field].append({"value": match[1], "quote": match[0]})
     return {"fields": found}
 
 

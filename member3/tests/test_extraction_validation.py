@@ -22,7 +22,7 @@ def test_valid_still_needs_a_human(member1):
 @pytest.mark.parametrize("changes", [
     {"effective_week": "6"}, {"effective_week": 0}, {"effective_week": 6.5}, {"old_revision": "BBB"},
     {"change_id": "1001"}, {"approval_status": "MAYBE"}, {"interchangeability": "yes"}, {"reason": ""},
-    {"new_revision": "B"}, {"effective_week": 8}, {"price": 5}])
+    {"new_revision": "B"}, {"effective_week": 9}, {"price": 5}])
 def test_invalid(changes):
     result = status(**changes)
     assert result["validation_status"] == "INVALID" and result["validation_errors"]
@@ -56,6 +56,7 @@ def test_member1_is_not_asked_about_incomplete_data():
 
 @pytest.mark.parametrize("field,raw,value", [
     ("effective_week", "W06", 6), ("effective_week", "week 12", 12), ("old_revision", "Rev. b", "B"),
+    ("interchangeability", "Yes - fully interchangeable", True), ("interchangeability", "No - not interchangeable", False),
     ("interchangeability", "Not interchangeable", False), ("approval_status", "released", "APPROVED")])
 def test_normalize(field, raw, value):
     assert normalize(field, raw) == value
@@ -63,7 +64,7 @@ def test_normalize(field, raw, value):
 
 @pytest.mark.parametrize("field,raw", [
     ("effective_week", "6/7"), ("effective_week", "15 March"), ("old_revision", "B and C"),
-    ("interchangeability", "partly"), ("approval_status", "nearly"), ("reason", "TBD"), ("approver", "??")])
+    ("interchangeability", "partly"), ("interchangeability", "Yes - not interchangeable"), ("approval_status", "nearly"), ("reason", "TBD"), ("approver", "??")])
 def test_normalize_refuses_unclear_text(field, raw):
     with pytest.raises(ValueError):
         normalize(field, raw)

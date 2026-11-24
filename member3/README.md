@@ -21,7 +21,7 @@ Google. Another provider is one class and one entry in `ai/provider.py`.
 
 ## Demo path
 
-ECN Intake: load sample 01, extract, tick the box, confirm, run planning. Then Optimization, What-If, Approval
+ECN Intake: load ECN-001, extract, tick the box, confirm, run planning. Then Optimization, What-If, Approval
 Center (the base case is escalated, so a comment is required), Action Tracker, Audit History (replay). The
 sidebar switches scenario and role.
 
@@ -36,9 +36,9 @@ sidebar switches scenario and role.
 
 ## Integration
 
-- **Member 1** through `services/member1_adapter.py`; its module name is `member1.module` in
-  `config/settings.yaml`. `reference/member1_standin.py` is a **temporary stand-in** (data, ECN check, BOM,
-  severity) because Member 1's module is not in the repository yet.
+- **Member 1** through `services/member1_adapter.py`; `integration/member1_module.py` translates names and calls
+  Member 1's validation, BOM report, simulator and severity ranking. `reference/member1_standin.py` is a **test
+  double** for unit tests (`CHANGEWISE_MEMBER1` selects it).
 - **Member 2** through `services/member2_adapter.py`. Its dashboard views are reused, so numbers look the same.
 - Metrics for Member 2's report:
   `python -m member2.evaluation.run_all member3/reports/evidence.json`.
@@ -52,8 +52,8 @@ by trigger and hash-chained. State changes and their audit events commit in one 
 | --- | --- |
 | ECN that differs from Member 1's change record | Blocked as `RECORD_MISMATCH` until corrected |
 | All ten ECN fields | Required, including reason and approver |
-| What-if Rev C delay | Moves open Rev C orders and lengthens their suppliers' lead times, so it cannot be expedited away |
-| What-if effective week | Holds that week; other weeks are not offered |
+| What-if Rev C delay | Moves open Rev C orders and lengthens their suppliers' lead times, so only the supplier's normal expedite saving can be won back |
+| What-if effective week | Best plan that has that week; the change record is not rewritten |
 | What-if order change | Only reductions of a Rev B order, priced and rule-checked by Member 2. Lifting a block is refused |
 | Comments | Required for escalated cases, a lower-ranked plan, a modified plan and any rejection |
 | Action owners | Purchasing for orders, Engineering for the effective week, Quality for using Rev B longer |
@@ -67,5 +67,5 @@ by trigger and hash-chained. State changes and their audit events commit in one 
 - The hash chain detects edits, gaps and reordering, but not removal of the newest events.
 - The claim verifier is pattern-based. It is tuned to reject or hold back wording it cannot check, so some
   true sentences fall back to the template.
-- The extraction samples were written together with the offline rules; their accuracy says little about real
-  documents.
+- Offline extraction scored 146/180 (81.1%, 2 wrong values) on Member 1's PDFs at first sight; the rules were
+  then adjusted to them. Expect something nearer the first figure on new layouts.

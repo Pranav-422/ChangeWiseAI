@@ -7,6 +7,7 @@ from member3.services import ecn_service, planning_service
 from member3.services.member1_adapter import Member1Adapter
 from member3.services.member2_adapter import Member2Adapter
 
+STANDIN = "member3.reference.member1_standin"
 PLANNER = User("Asha", "Planner")
 
 
@@ -31,12 +32,13 @@ DOWN = FakeProvider(ProviderError("timeout"))
 def database(tmp_path, monkeypatch):
     monkeypatch.setenv("CHANGEWISE_DB", str(tmp_path / "app.db"))
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setenv("CHANGEWISE_MEMBER1", STANDIN)  # test_member1_integration.py uses the real module
     return tmp_path / "app.db"
 
 
 @pytest.fixture(scope="session")
 def member1():
-    return Member1Adapter()
+    return Member1Adapter(STANDIN)
 
 
 @pytest.fixture(scope="session")

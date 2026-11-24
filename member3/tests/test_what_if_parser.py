@@ -105,8 +105,10 @@ def test_delay_cannot_be_expedited_away(planned, member2):
 
 
 def test_effective_week_is_held_fixed(planned, member2):
-    result = submit(planned(), member2, effective_week=7)["result"]
-    assert {p["effective_week"] for p in result["ranked_plans"]} == {7}
+    outcome = submit(planned(), member2, effective_week=7)
+    by = {r["measure"]: r for r in outcome["comparison"]}
+    assert outcome["plan"]["effective_week"] == 7 and outcome["plan"]["summary"] == "Reduce PO-001 by 150; Move effective week W6 to W7"
+    assert by["decision"]["alternative"] == "BEST_PLAN_WITH_REQUEST" and by["secondary_cost"]["alternative"] == 3750
 
 
 def test_reduction_uses_member2_rules_and_fees(planned, member2):
@@ -124,8 +126,14 @@ def test_scenario_without_a_plan(planned, member2):
     assert "No plan is recommended" in describe_comparison(outcome["comparison"])
 
 
-def test_invalid_effective_week_result(planned, member2):
-    assert submit(planned(), member2, effective_week=9)["result"]["decision"] == "INVALID_DATA"
+def test_late_effective_week_shows_its_shortage(planned, member2):
+    """W9 leaves W8 without a permitted revision."""
+    assert submit(planned(), member2, effective_week=9)["plan"]["shortage_units"] == 100
+
+
+def test_request_that_no_plan_satisfies(planned, member2):
+    outcome = submit(planned(), member2, effective_week=6, supplier_block="S1")
+    assert outcome["plan"] is None and outcome["result"]["decision"] == "NO_FEASIBLE_PLAN"
 
 
 def test_comparison_keeps_missing_values_missing():

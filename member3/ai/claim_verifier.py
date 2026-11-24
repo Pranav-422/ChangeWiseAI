@@ -162,7 +162,7 @@ def verify_numeric_claims(claims, facts):
     weeks = {facts["change"]["effective_week"], facts["change"]["use_up_end_week"],
              *inventory["demand_by_week"], *(p["effective_week"] for p in facts["plans"].values()),
              *(e["week"] for e in exceptions)}
-    by_action = {int(n) for p in facts["plans"].values() for n in re.findall(r"by (\d+)(?! wk)", p["actions"])}
+    by_action = {int(n) for p in facts["plans"].values() for n in re.findall(r"by (\d+)\b(?! wk)", p["actions"])}
     failures = []
     for claim in claims:
         sentence, scope = claim["sentence"], _scope(claim, facts)

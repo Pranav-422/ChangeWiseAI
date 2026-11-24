@@ -1,17 +1,24 @@
-"""TEMPORARY STAND-IN for Member 1's module, until it is merged.
+"""TEST DOUBLE for Member 1. Production uses integration/member1_module.py.
 
-Member 1 owns the data, master-data validation, BOM traversal, inventory simulation and severity
-scoring. Application code reaches this only through services/member1_adapter.py; replace it with
-`member1.module` in config/settings.yaml.
+It keeps tests small and covers cases Member 1's data does not contain. Application code reaches either
+one only through services/member1_adapter.py.
 """
+import json
+
 from member2.reference.scenarios import SCENARIOS
 from member2.reference.simulator import simulate_inventory  # noqa: F401  (part of Member 1's interface)
+
+from ..settings import ROOT
 
 SYNTHETIC = True
 PART_NUMBER = "BRK-100"
 # (parent, child): the full assembly structure around the changed bracket.
 BOM_EDGES = [("PUMP-ASSY", "MOUNT-SUB"), ("MOUNT-SUB", "BRK-B"), ("SPARE-KIT", "BRK-B")]
 SEVERITY_BANDS = [("Critical", 40000), ("High", 10000), ("Medium", 2000), ("Low", 0)]
+
+
+def sample_documents():
+    return json.loads((ROOT / "member3/data/demo/ecn_samples.json").read_text(encoding="utf-8"))
 
 
 def list_scenarios():
@@ -40,17 +47,6 @@ def validate_ecn(fields, dataset):
         for field in ("old_revision", "new_revision"):
             if fields[field] not in revisions:
                 bad("UNKNOWN_REVISION", field, f"{fields['part_number']} has no revision {fields[field]}.")
-    record = dataset["engineering_change"]
-    if fields["change_id"] != record["change_id"]:
-        bad("UNKNOWN_CHANGE", "change_id", f"{fields['change_id']} has no engineering-change record.")
-        return errors
-    known = {v: k for k, v in revisions.items()}
-    expected = {"old_revision": known.get(record["old_material_id"]), "new_revision": known.get(record["new_material_id"]),
-                "effective_week": record["effective_week"], "use_up_end_week": record["use_up_end_week"],
-                "interchangeability": bool(record["interchangeable"]), "approval_status": record["status"]}
-    for field, value in expected.items():
-        if revisions and fields[field] != value:
-            bad("RECORD_MISMATCH", field, f"Document says {fields[field]}, record {record['change_id']} says {value}.")
     return errors
 
 

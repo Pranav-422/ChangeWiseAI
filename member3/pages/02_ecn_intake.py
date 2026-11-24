@@ -1,5 +1,3 @@
-import json
-
 import pandas as pd
 import streamlit as st
 
@@ -7,14 +5,12 @@ from member3.ai.ecn_extractor import ExtractionFailure, extract_pdf_text, extrac
 from member3.application.access_control import NotAllowed
 from member3.application.session_manager import context, flash, page_header
 from member3.services import ecn_service, planning_service
-from member3.settings import ROOT
 
 ctx = context()
 page_header("ECN Intake", ctx)
 
 with st.expander("New document", expanded=ecn_service.latest_review(ctx.scenario) is None):
-    samples = json.loads((ROOT / "member3/data/demo/ecn_samples.json").read_text(encoding="utf-8"))
-    sample = st.selectbox("Load a sample text", [None] + samples,
+    sample = st.selectbox("Load a sample document", [None] + ctx.member1.sample_documents(),
                           format_func=lambda s: f"{s['id']}: {s['title']}" if s else "None")
     upload = st.file_uploader("Upload ECN or ECR", type=["pdf", "txt"])
     pasted = st.text_area("Or paste the text", sample["text"] if sample else "", height=220)

@@ -49,5 +49,6 @@ st.markdown(":blue-badge[Template-generated] " + what_if_service.describe_compar
 st.dataframe(pd.DataFrame([{"Measure": r["measure"].replace("_", " "), **{
     k.capitalize(): "n/a" if r[k] is None else str(r[k]) for k in ("base", "alternative", "change")}}
     for r in outcome["comparison"]]), hide_index=True)
-for record in outcome["result"]["escalations"]:
-    st.warning(f"{record['code']}: {record['message']}")
+if not outcome["constrained"]:
+    for record in outcome["result"]["escalations"]:
+        st.warning(f"{record['code']}: {record['message']}")

@@ -11,6 +11,6 @@ def render(exceptions):
         return
     st.dataframe(pd.DataFrame([{
         "Band": _MARK.get(e["band"], e["band"]), "Exception": e["exception_id"],
-        "Type": e["type"].replace("_", " ").capitalize(), "Week": f"W{e['week']}", "Units": e["units"],
+        "Type": e["type"].replace("_", " ").capitalize(), "Week": f"W{e['week']}" if e["week"] else "now", "Units": e["units"],
         "Impact (₹)": e["impact_rs"], "Severity": e["severity"], "Description": e["description"],
     } for e in exceptions]), hide_index=True)
