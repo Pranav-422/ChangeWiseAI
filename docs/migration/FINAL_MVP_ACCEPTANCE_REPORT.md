@@ -26,7 +26,7 @@ project, the Render service, and a Gemini key. Steps: `DEPLOYMENT.md`.
 | Frontend unit and component | CI | 36 passed; lint, type check and production build clean |
 | End to end, local stand-in for Supabase | Windows, Chrome | 21 passed, 1 skipped (needs the real stack) |
 | End to end, real Supabase stack (PostgreSQL 17.12, Auth, Storage, mail) | CI, Chromium | 21 passed, 1 skipped (needs the stand-in) |
-| RLS, roles, bucket and REST exposure on the real stack | CI | every check passed |
+| RLS, roles, bucket and REST exposure on the real stack | CI | all 62 checks passed |
 | Data migration, value by value | CI real stack, local PostgreSQL 16 | PASS, 0 missing, 0 different |
 
 ## Database
@@ -36,7 +36,7 @@ project, the Render service, and a Gemini key. Steps: `DEPLOYMENT.md`.
 | Hosted Supabase project | **BLOCKED**: needs the owner's account |
 | Five migrations on the real Supabase stack | done (CI) |
 | Sources backed up read-only with checksums | done; `backups/`, not committed |
-| Rows | 49 Member 1 rows migrated, IDs unchanged; Member 3's local database is empty. A complete Member 3 workflow was migrated in a test: chain intact, replay matches, new events continue the chain |
+| Rows | 50 Member 1 rows migrated, IDs unchanged; Member 3's local database is empty. A complete Member 3 workflow was migrated in a test: chain intact, replay matches, new events continue the chain |
 | Foreign keys | 32, all validated |
 | RLS | on for every table; verified per role on the real stack |
 | Storage | private bucket; verified on the real stack |
@@ -57,7 +57,7 @@ project, the Render service, and a Gemini key. Steps: `DEPLOYMENT.md`.
 |---|---|
 | Vercel | project `changewise-ai` created; preview builds and is Ready: https://changewise-8f65p2hs3-unhinged1.vercel.app (Vercel login required). It shows "Not configured yet", because Supabase and Render values do not exist |
 | Production deployment | **BLOCKED** by the same |
-| Pages | 14 workspace routes and 5 sign-in routes |
+| Pages | 16 workspace routes and 5 sign-in routes |
 | Responsive | no horizontal overflow on any page at 1440, 1180, 820, 390 (test) |
 | Keyboard | skip link, tabs, chart weeks, quick jump, native dialogs (test) |
 | Secrets in the bundle | none (test) |

@@ -25,7 +25,7 @@ State inspected: commit `d562da2` (`main`, pull requests 1 to 3 merged), 24 Nove
 * Member 1 schema, 14 tables: 8 input tables (read), `simulation_runs` and `exceptions` (written by Member 1),
   `candidate_plans`, `plan_actions`, `action_tracker`, `audit_log` (proposed for Members 2 and 3, empty in practice).
 * Member 3 schema, 6 tables: `ecn_reviews`, `planning_runs`, `what_if_requests`, `approvals`, `action_items`, `audit_log`.
-* Rows found: Member 1 has 49 rows in 10 tables; Member 3's local database is empty and is not in Git.
+* Rows found: Member 1 has 50 rows in 10 tables; Member 3's local database is empty and is not in Git.
 
 ## Overlaps found and how they were resolved
 
