@@ -1,0 +1,30 @@
+# ChangeWise AI - Member 1 engine settings.
+# Every value here is shared with Members 2 and 3; change only after team agreement.
+
+engine_version: "m1-1.1.0"
+plant_id: PUMP-PLANT-01
+horizon_weeks: 8            # planning horizon, weeks W1..W8
+coverage_weeks: 4           # the "4" in E_C = max(0, RevC_closing - 4D) x UnitCost_C
+
+# Synthetic proxy for the cost of one unmet bracket (line stoppage). INR per unit.
+# Used only for the "estimated financial impact" of a shortage, never in E + C.
+shortage_cost_per_unit: 2000
+
+severity:
+  # score = 100 x (type*type_weight + impact*min(1, value/impact_cap) + urgency*urgency_factor)
+  weights: {type: 0.5, impact: 0.3, urgency: 0.2}
+  impact_cap: 100000        # INR value at which the impact term saturates
+  bands: {CRITICAL: 75, HIGH: 50, MEDIUM: 25}   # score >= threshold; below MEDIUM = LOW
+  # Data problems that stop planning are always CRITICAL: nothing else can be fixed until they are.
+  blocking_types: [DATA_INVALID, DATA_INSUFFICIENT]
+  blocking_floor: 80
+  type_weights:
+    PRODUCTION_SHORTAGE: 1.0
+    REVISION_GAP: 1.0
+    SUPPLIER_RESTRICTION: 0.8
+    LEAD_TIME_RISK: 0.7
+    DATA_INSUFFICIENT: 0.7
+    DATA_INVALID: 0.9
+    REV_B_SCRAP_RISK: 0.6
+    REV_C_EXCESS: 0.4
+    DATA_REVIEW: 0.3

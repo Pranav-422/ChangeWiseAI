@@ -1,0 +1,43 @@
+{
+  "_note": "Hand-checked by working the weekly balance on paper (allocation policy in engine/inventory.py). Used for the slide-8 'shortage & excess detection: exact week' metric. Do not regenerate from engine output.",
+  "bom_impact": {
+    "MAT-101": {
+      "affected_parents": ["KIT-301", "PUMP-001", "PUMP-002", "SUB-201"],
+      "affected_top_level": ["KIT-301", "PUMP-001", "PUMP-002"],
+      "working": "SUB-201 uses MAT-101 (BOM-003); PUMP-001 and PUMP-002 use SUB-201 (BOM-001/002); KIT-301 uses MAT-101 (BOM-005)."
+    }
+  },
+  "scenarios": {
+    "base": {
+      "total_shortage_units": 0, "first_shortage_week": null, "shortage_week_list": [],
+      "rev_b_scrap_units": 230, "excess_value": 92000,
+      "working": "Rev B usable 500-50-30=420; +200 W3 +100 W5; demand W1-5 = 520; closing W5 = 280; free = 280-50 = 230 x 400. Rev C 500 at W6 - 450 = 50 < 4 x 121.25, so E_C = 0."
+    },
+    "rev_c_supplier_delay": {
+      "total_shortage_units": 300, "first_shortage_week": 6, "shortage_week_list": [6, 7],
+      "rev_b_scrap_units": 230, "excess_value": 92000,
+      "working": "PO-003 arrives W8: W6 and W7 have no Rev C (150 + 150 unmet); W8 uses 150 of 500, closing 350 < 485."
+    },
+    "excess_rev_b_orders": {
+      "total_shortage_units": 0, "first_shortage_week": null, "shortage_week_list": [],
+      "rev_b_scrap_units": 530, "excess_value": 212000,
+      "working": "PO-002 = 400, so 300 more Rev B than base: 230 + 300 = 530 x 400."
+    },
+    "blocked_supplier": {
+      "total_shortage_units": 450, "first_shortage_week": 6, "shortage_week_list": [6, 7, 8],
+      "rev_b_scrap_units": 230, "excess_value": 92000,
+      "working": "S2 Blocked, so PO-003 is not counted; W6-W8 all unmet (3 x 150)."
+    },
+    "date_conflict": {
+      "total_shortage_units": 240, "first_shortage_week": 4, "shortage_week_list": [4, 5],
+      "rev_b_scrap_units": 470, "excess_value": 188000,
+      "working": "Use-up W3, effective W6: W4 and W5 have no permitted revision (120 + 120). Rev B closing W3 = 420, free 370, + PO-002 (100, W5, after use-up) = 470 x 400."
+    },
+    "missing_records": {
+      "total_shortage_units": 0, "first_shortage_week": null, "shortage_week_list": [],
+      "rev_b_scrap_units": 230, "excess_value": 92000,
+      "expected_status": "INSUFFICIENT_DATA",
+      "working": "Same quantities as base (missing Rev C row = 0 stock, which base already has), but status must block planning."
+    }
+  }
+}

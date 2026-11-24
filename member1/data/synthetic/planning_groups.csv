@@ -1,0 +1,7 @@
+group_id,group_name,material_id,supplier_id,authorization_status
+PG-10,Bracket Purchasing,MAT-101,S1,Authorized
+PG-10,Bracket Purchasing,MAT-102,S2,Authorized
+PG-10,Bracket Purchasing,MAT-102,S3,Unauthorized
+PG-20,Alternate Source Purchasing,MAT-102,S4,Unauthorized
+PG-30,General Components,MAT-202,S5,Authorized
+PG-30,General Components,MAT-203,S3,Authorized

@@ -1,0 +1,74 @@
+{
+  "bom_impact_completeness": {
+    "completeness": 1.0,
+    "materials": {
+      "MAT-101": {
+        "found": [
+          "KIT-301",
+          "PUMP-001",
+          "PUMP-002",
+          "SUB-201"
+        ],
+        "missed": [],
+        "extra": [],
+        "completeness": 1.0
+      }
+    }
+  },
+  "inventory_reconciliation": {
+    "balances_checked": 864,
+    "reconciled": 864,
+    "accuracy": 1.0,
+    "runs": 54
+  },
+  "shortage_excess_detection": {
+    "scenarios": 6,
+    "exact_matches": 6,
+    "accuracy": 1.0,
+    "detail": [
+      {
+        "scenario": "base",
+        "exact": true,
+        "mismatches": {}
+      },
+      {
+        "scenario": "rev_c_supplier_delay",
+        "exact": true,
+        "mismatches": {}
+      },
+      {
+        "scenario": "excess_rev_b_orders",
+        "exact": true,
+        "mismatches": {}
+      },
+      {
+        "scenario": "blocked_supplier",
+        "exact": true,
+        "mismatches": {}
+      },
+      {
+        "scenario": "date_conflict",
+        "exact": true,
+        "mismatches": {}
+      },
+      {
+        "scenario": "missing_records",
+        "exact": true,
+        "mismatches": {}
+      }
+    ]
+  },
+  "audit_replay": {
+    "replays": 18,
+    "identical": 18,
+    "reproducibility": 1.0
+  },
+  "severity_ranking_agreement": {
+    "items_compared": 19,
+    "kendall_tau": 0.7192982456140351,
+    "top3_overlap": 0.3333333333333333,
+    "missing_from_engine": [],
+    "reference_status": "DRAFT - ranked from the written planner rules below, not from engine scores. A team member acting as planner must review and re-order by hand before this is quoted as a result."
+  },
+  "simulation_speed_ms": 3.87
+}

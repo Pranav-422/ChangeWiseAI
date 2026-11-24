@@ -1,0 +1,38 @@
+{
+  "document": "ECN-010.pdf",
+  "category": "ambiguous_fields",
+  "expected": {
+    "change_id": "ECN-010",
+    "part_number": "MAT-101",
+    "old_revision": "Rev B",
+    "new_revision": "Rev C",
+    "effective_week": null,
+    "use_up_end_week": 5,
+    "interchangeability": true,
+    "reason": "Improved mechanical durability",
+    "approver": "Engineering Manager",
+    "approval_status": "Approved"
+  },
+  "field_status": {
+    "change_id": "PRESENT",
+    "part_number": "PRESENT",
+    "old_revision": "PRESENT",
+    "new_revision": "PRESENT",
+    "effective_week": "AMBIGUOUS",
+    "use_up_end_week": "PRESENT",
+    "interchangeability": "PRESENT",
+    "reason": "PRESENT",
+    "approver": "PRESENT",
+    "approval_status": "PRESENT"
+  },
+  "missing_fields": [],
+  "ambiguous_fields": [
+    {
+      "field": "effective_week",
+      "source_text": "around week 6 or 7, subject to supplier confirmation"
+    }
+  ],
+  "conflicts": [],
+  "invalid_fields": [],
+  "requires_human_review": true
+}
