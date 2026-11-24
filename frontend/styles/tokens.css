@@ -31,6 +31,7 @@
   /* Revisions: the old one always bronze, the new one always cyan */
   --color-rev-old: #9a5b2e;
   --color-rev-old-soft: #f0e2d5;
+  --color-rev-old-ink: #7d4822;   /* text on rev-old-soft */
   --color-rev-new: #0a86a8;
   --color-rev-new-soft: #d9eef4;
 

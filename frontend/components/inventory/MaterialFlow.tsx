@@ -63,7 +63,7 @@ export function MaterialFlow({ weeks, effectiveWeek, useUpEnd, oldRevision, newR
             <path d={`M${x(strandedFrom)},${floor} ${steps(values.slice(strandedFrom), (i) => x(i + strandedFrom), y).replace("M", "L")} L${x(values.length)},${floor} Z`} fill="url(#stranded)" />
             {room && !narrow && <>
               <rect x={x(strandedFrom) + 8} y={floor - 25} width={120} height={17} fill="var(--color-sheet)" />
-              <text x={x(strandedFrom) + 13} y={floor - 12.5} fontSize={12} fontWeight={600} fill="var(--color-rev-old)">Not usable after W{useUpEnd}</text>
+              <text x={x(strandedFrom) + 13} y={floor - 12.5} fontSize={12} fontWeight={600} fill="var(--color-rev-old-ink)">Not usable after W{useUpEnd}</text>
             </>}
           </g>
         )}

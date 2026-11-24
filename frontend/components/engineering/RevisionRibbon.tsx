@@ -12,7 +12,7 @@ export function RevisionRibbon({ from, to, effectiveWeek, useUpEnd, horizon, int
   return (
     <figure aria-label={`${from} may be used until week ${useUpEnd}. ${to} starts in week ${effectiveWeek}.`} className="@container min-w-0">
       <div className="grid gap-y-1" style={{ gridTemplateColumns: `repeat(${horizon}, minmax(0, 1fr))` }}>
-        <div style={span(1, useUpEnd)} className="relative flex h-9 items-center gap-2 overflow-hidden bg-rev-old-soft pl-2 text-rev-old [clip-path:polygon(0_0,calc(100%-14px)_0,100%_100%,0_100%)]">
+        <div style={span(1, useUpEnd)} className="relative flex h-9 items-center gap-2 overflow-hidden bg-rev-old-soft pl-2 text-rev-old-ink [clip-path:polygon(0_0,calc(100%-14px)_0,100%_100%,0_100%)]">
           <RevisionMark revision={from} kind="old" size={22} />
           <span className="truncate text-sm font-semibold"><span className="hidden @lg:inline">Phase out, t</span><span className="@lg:hidden">T</span>hrough W{useUpEnd}</span>
         </div>
