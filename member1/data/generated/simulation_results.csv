@@ -1,0 +1,9 @@
+week,demand,rev_b_opening,rev_b_receipts,rev_b_reserved,rev_b_available,rev_b_safety_stock,rev_b_usable,rev_c_opening,rev_c_receipts,rev_c_reserved,rev_c_available,rev_c_safety_stock,rev_c_usable,rev_b_usage,rev_b_closing,rev_c_usage,rev_c_closing,applicable_revision,shortage,rev_b_unmet,rev_c_unmet
+1,80,500,0,50,450,30,420,0,0,0,0,20,0,80,420,0,0,B,0,0,0
+2,100,420,0,50,370,30,340,0,0,0,0,20,0,100,320,0,0,B,0,0,0
+3,100,320,200,50,470,30,440,0,0,0,0,20,0,100,420,0,0,B,0,0,0
+4,120,420,0,50,370,30,340,0,0,0,0,20,0,120,300,0,0,B,0,0,0
+5,120,300,100,50,350,30,320,0,0,0,0,20,0,120,280,0,0,B,0,0,0
+6,150,280,0,50,230,30,200,0,500,0,500,20,480,0,280,150,350,C,0,0,0
+7,150,280,0,50,230,30,200,350,0,0,350,20,330,0,280,150,200,C,0,0,0
+8,150,280,0,50,230,30,200,200,0,0,200,20,180,0,280,150,50,C,0,0,0

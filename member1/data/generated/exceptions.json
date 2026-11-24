@@ -1,0 +1,19 @@
+[
+  {
+    "exception_id": "EXC-REV_B_SCRAP_RISK-MAT-101-W5",
+    "simulation_id": "SIM-092d8859f17b",
+    "change_id": "ECN-001",
+    "exception_type": "REV_B_SCRAP_RISK",
+    "material_id": "MAT-101",
+    "week": 5,
+    "quantity": 230,
+    "financial_impact": 92000.0,
+    "description": "230 Rev B units unusable after use-up end W5 (incl. 30 former safety stock, 0 received after use-up end).",
+    "recommended_action": "Reduce, cancel or defer-and-cancel open Rev B POs; review use-up plan.",
+    "owner_role": "Materials Management",
+    "status": "OPEN",
+    "severity_score": 67.6,
+    "severity_level": "HIGH",
+    "severity_rank": 1
+  }
+]

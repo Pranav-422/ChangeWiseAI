@@ -1,0 +1,31 @@
+{
+  "status": "DRAFT - ranked from the written planner rules below, not from engine scores. A team member acting as planner must review and re-order by hand before this is quoted as a result.",
+  "rules": [
+    "1. Data that stops planning entirely comes first (nothing else can be acted on).",
+    "2. Then production shortages, earliest week first; at equal week, the one with no recovery path (blocked supplier) before a late delivery.",
+    "3. Then the root causes behind those shortages (supplier restriction, revision gap in the ECN).",
+    "4. Then scrap risk, by value.",
+    "5. Per-week repeats of a root cause already listed come last."
+  ],
+  "ranking": [
+    "missing_records:EXC-DATA_INSUFFICIENT-INV_MISSING_FOR_AFFECTED-MAT-102",
+    "missing_records:EXC-DATA_INSUFFICIENT-SIM_MISSING_LEAD_TIME-PO-003",
+    "date_conflict:EXC-PRODUCTION_SHORTAGE-MAT-101-W4",
+    "date_conflict:EXC-PRODUCTION_SHORTAGE-MAT-101-W5",
+    "blocked_supplier:EXC-PRODUCTION_SHORTAGE-MAT-102-W6",
+    "rev_c_supplier_delay:EXC-PRODUCTION_SHORTAGE-MAT-102-W6",
+    "blocked_supplier:EXC-PRODUCTION_SHORTAGE-MAT-102-W7",
+    "rev_c_supplier_delay:EXC-PRODUCTION_SHORTAGE-MAT-102-W7",
+    "blocked_supplier:EXC-PRODUCTION_SHORTAGE-MAT-102-W8",
+    "blocked_supplier:EXC-SUPPLIER_RESTRICTION-SIM_RESTRICTED_SUPPLIER_RECEIPT_EXCLUDED-PO-003",
+    "date_conflict:EXC-REVISION_GAP-ECN_REVISION_GAP-ECN-001",
+    "excess_rev_b_orders:EXC-REV_B_SCRAP_RISK-MAT-101-W5",
+    "date_conflict:EXC-REV_B_SCRAP_RISK-MAT-101-W3",
+    "base:EXC-REV_B_SCRAP_RISK-MAT-101-W5",
+    "blocked_supplier:EXC-REV_B_SCRAP_RISK-MAT-101-W5",
+    "missing_records:EXC-REV_B_SCRAP_RISK-MAT-101-W5",
+    "rev_c_supplier_delay:EXC-REV_B_SCRAP_RISK-MAT-101-W5",
+    "date_conflict:EXC-REVISION_GAP-SIM_NO_PERMITTED_REVISION-ECN-001.W4",
+    "date_conflict:EXC-REVISION_GAP-SIM_NO_PERMITTED_REVISION-ECN-001.W5"
+  ]
+}

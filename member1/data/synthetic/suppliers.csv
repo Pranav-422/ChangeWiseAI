@@ -1,0 +1,6 @@
+supplier_id,supplier_name,supplier_status,lead_time_weeks,expedite_available,expedited_lead_time_weeks,expedite_fee,restriction_note
+S1,Alpha Precision Castings,Approved,3,0,,0,
+S2,Bravo Forgings,Approved,4,1,3,12000,
+S3,Charlie Metal Works,Blocked,3,0,,0,Blocked: open quality notification QN-4471 (weld porosity)
+S4,Delta Fabrication,Unqualified,2,1,1,8000,Unqualified: PPAP for Rev C bracket not approved
+S5,Echo Pump Components,Approved,2,0,,0,

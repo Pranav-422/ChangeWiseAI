@@ -1,0 +1,33 @@
+{
+  "document": "ECN-002.pdf",
+  "category": "complete",
+  "expected": {
+    "change_id": "ECN-002",
+    "part_number": "MAT-202",
+    "old_revision": "Rev A",
+    "new_revision": "Rev B",
+    "effective_week": 8,
+    "use_up_end_week": 7,
+    "interchangeability": false,
+    "reason": "Cavitation erosion at blade tips; revised blade profile",
+    "approver": "Chief Design Engineer",
+    "approval_status": "Approved"
+  },
+  "field_status": {
+    "change_id": "PRESENT",
+    "part_number": "PRESENT",
+    "old_revision": "PRESENT",
+    "new_revision": "PRESENT",
+    "effective_week": "PRESENT",
+    "use_up_end_week": "PRESENT",
+    "interchangeability": "PRESENT",
+    "reason": "PRESENT",
+    "approver": "PRESENT",
+    "approval_status": "PRESENT"
+  },
+  "missing_fields": [],
+  "ambiguous_fields": [],
+  "conflicts": [],
+  "invalid_fields": [],
+  "requires_human_review": false
+}

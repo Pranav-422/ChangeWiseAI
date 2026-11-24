@@ -1,0 +1,68 @@
+{
+  "material": "MAT-101",
+  "material_name": "Mounting Bracket Rev B",
+  "old_revision": "Rev B",
+  "new_material": "MAT-102",
+  "new_revision": "Rev C",
+  "change_id": "ECN-001",
+  "affected_assemblies": [
+    {
+      "assembly": "KIT-301",
+      "assembly_type": "KIT",
+      "path": [
+        "Bracket Service Kit",
+        "Mounting Bracket Rev B"
+      ],
+      "path_ids": [
+        "KIT-301",
+        "MAT-101"
+      ],
+      "quantity_per_assembly": 1.0
+    },
+    {
+      "assembly": "PUMP-001",
+      "assembly_type": "FINISHED",
+      "path": [
+        "Pump Assembly",
+        "Mounting Sub-Assembly",
+        "Mounting Bracket Rev B"
+      ],
+      "path_ids": [
+        "PUMP-001",
+        "SUB-201",
+        "MAT-101"
+      ],
+      "quantity_per_assembly": 1.0
+    },
+    {
+      "assembly": "PUMP-002",
+      "assembly_type": "FINISHED",
+      "path": [
+        "Compact Pump Assembly",
+        "Mounting Sub-Assembly",
+        "Mounting Bracket Rev B"
+      ],
+      "path_ids": [
+        "PUMP-002",
+        "SUB-201",
+        "MAT-101"
+      ],
+      "quantity_per_assembly": 1.0
+    }
+  ],
+  "direct_parents": [
+    "KIT-301",
+    "SUB-201"
+  ],
+  "indirect_parents": [
+    "PUMP-001",
+    "PUMP-002"
+  ],
+  "affected_finished_products": [
+    "KIT-301",
+    "PUMP-001",
+    "PUMP-002"
+  ],
+  "cycles": [],
+  "impact_status": "IDENTIFIED"
+}

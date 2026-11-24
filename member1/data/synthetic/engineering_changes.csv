@@ -1,0 +1,2 @@
+change_id,part_number,new_material_id,old_revision,new_revision,effective_week,use_up_end_week,interchangeability,reason,approver,approval_status,approval_week,created_at
+ECN-001,MAT-101,MAT-102,Rev B,Rev C,6,5,1,Improved mechanical durability,Engineering Manager,Approved,1,2026-11-20T09:00:00

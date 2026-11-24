@@ -1,0 +1,10 @@
+bom_id,parent_material_id,child_material_id,quantity_per_parent,effective_from,effective_to
+BOM-001,PUMP-001,SUB-201,1,1,
+BOM-002,PUMP-002,SUB-201,1,1,
+BOM-003,SUB-201,MAT-101,1,1,5
+BOM-004,SUB-201,MAT-102,1,6,
+BOM-005,KIT-301,MAT-101,1,1,5
+BOM-006,PUMP-001,MAT-201,1,1,
+BOM-007,PUMP-001,MAT-202,1,1,
+BOM-008,PUMP-002,MAT-202,1,1,
+BOM-009,SUB-201,MAT-203,4,1,
