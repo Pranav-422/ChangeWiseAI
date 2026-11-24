@@ -25,7 +25,7 @@ RULES = (
 )
 
 
-@lru_cache(maxsize=16)
+@lru_cache(maxsize=4)  # a run is about 10 MB in memory and the free instance has 512 MB
 def _load(run_id):
     return planning_service.get_run(run_id)
 
