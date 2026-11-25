@@ -66,7 +66,9 @@ def parse_json_object(text):
 
 def _gemini(ai):
     key = os.environ.get("GEMINI_API_KEY")
-    return GeminiProvider(key, os.environ.get("GEMINI_MODEL") or ai["model"], ai["timeout_seconds"]) if key else None
+    model = os.environ.get("GEMINI_MODEL") or ai["model"]
+    # GEMINI_MODEL=off switches the AI off and keeps the stored key
+    return GeminiProvider(key, model, ai["timeout_seconds"]) if key and model != "off" else None
 
 
 PROVIDERS = {"gemini": _gemini}

@@ -74,3 +74,10 @@ def test_every_failure_becomes_a_provider_error_without_the_key(server, answer):
 def test_unreachable_server(server):
     with pytest.raises(ProviderError):
         GeminiProvider("secret-key", "some-model", 2, base_url="http://127.0.0.1:9").complete_json("x")
+
+
+def test_the_ai_can_be_switched_off_without_removing_the_key(monkeypatch):
+    from member3.ai.provider import get_provider
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("GEMINI_MODEL", "off")
+    assert get_provider() is None

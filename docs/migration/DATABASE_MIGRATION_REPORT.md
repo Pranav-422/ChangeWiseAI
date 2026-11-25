@@ -1,8 +1,8 @@
 # Database migration report
 
-Generated 2026-11-24T15:30:59+00:00 by `scripts/migration/verify_migration.py`.
+Generated 2026-11-25T09:05:46+00:00 by `scripts/migration/verify_migration.py`.
 
-* Target: PostgreSQL 16.15, local disposable server (not Supabase).
+* Target: PostgreSQL 17.12, hosted Supabase project (Mumbai).
 * Result: **PASS**
 
 | Source table | Target table | Source rows | Target rows | Missing | Values that differ |
