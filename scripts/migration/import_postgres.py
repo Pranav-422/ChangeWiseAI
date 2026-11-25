@@ -19,7 +19,7 @@ _IDENTITIES = [("app.ecn_reviews", "rowid"), ("app.planning_runs", "rowid"), ("a
 def load(url, content, allow_rejects=False):
     report = {"tables": [], "rejected": []}
     # the outer transaction makes the per-row ones savepoints
-    with psycopg.connect(url) as conn, conn.transaction() as everything:
+    with psycopg.connect(url, prepare_threshold=None) as conn, conn.transaction() as everything:
         for source, table, target, _ in MAPPING:
             rows = content.get(source, {}).get("rows", {}).get(table, [])
             inserted = 0

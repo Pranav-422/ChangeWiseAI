@@ -14,7 +14,7 @@ from .common import ROOT
 
 def apply(url):
     done = []
-    with psycopg.connect(url, autocommit=True) as conn:
+    with psycopg.connect(url, autocommit=True, prepare_threshold=None) as conn:
         conn.execute("CREATE SCHEMA IF NOT EXISTS supabase_migrations")
         conn.execute("CREATE TABLE IF NOT EXISTS supabase_migrations.schema_migrations "
                      "(version TEXT PRIMARY KEY, statements TEXT[], name TEXT)")

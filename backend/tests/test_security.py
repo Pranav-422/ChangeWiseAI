@@ -193,8 +193,8 @@ def test_upload_limits(users, stored):
     assert send("a.exe", b"MZ") == (415, "UNSUPPORTED_TYPE")
     assert send("a.txt", b"abc\x00def", "text/plain") == (415, "UNSUPPORTED_TYPE")
     assert send("a.pdf", b"") == (422, "EMPTY_DOCUMENT")
-    assert send("a.pdf", b"%PDF-" + b"0" * (10 * 1024 * 1024 + 1))[0] == 413
-    assert send("a.pdf", b"%PDF-" + b"0" * (11 * 1024 * 1024)) == (413, "TOO_LARGE")
+    assert send("a.pdf", b"%PDF-" + b"0" * (4 * 1024 * 1024 + 1))[0] == 413
+    assert send("a.pdf", b"%PDF-" + b"0" * (5 * 1024 * 1024)) == (413, "TOO_LARGE")
     assert api.error("POST", "/ecn/upload", data={"change_id": "ECN-001"}) == (422, "EMPTY_DOCUMENT")
     assert not stored
     doc = api.call("POST", "/ecn/upload", data={"change_id": "ECN-001"},

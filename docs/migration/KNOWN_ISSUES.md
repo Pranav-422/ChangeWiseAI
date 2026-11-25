@@ -22,9 +22,14 @@
   database administrator who also disables the triggers. The page shows the latest hash so it can be kept elsewhere.
 * **Scanned PDFs** without a text layer are refused. No OCR is included.
 * **Claim verifier** is deterministic and conservative: a true sentence it cannot check leads to the template.
-* **Writers are serialised** by one advisory lock, as SQLite did. Enough for a planning team, not for hundreds of concurrent writers.
+* **Writers are serialised** by one advisory lock, as SQLite did. The lock is in PostgreSQL, so it also holds
+  across function instances. Enough for a planning team, not for hundreds of concurrent writers.
 * **No rate limit** in the API. Supabase limits sign-in attempts; the API relies on authentication and on body limits.
-* **Render free plan** sleeps after 15 minutes; the first request then takes about a minute. The interface says so and waits.
+* **Cold starts.** The API runs as a Vercel function. The first request after a quiet period takes some seconds longer.
+* **Vercel Hobby limits** for the API: 300 s maximum duration, 2 GB memory, 500 MB Python bundle.
+* **Uploads are limited to 4 MB**, because a Vercel function accepts a request body of at most 4.5 MB. The Supabase bucket limit stays
+  10 MiB.
+* **State per instance.** The run cache and the connection pool belong to one function instance. Another instance starts without them.
 * **CSP** allows inline scripts, because Next.js injects its bootstrap inline.
 * **Python 3.11** is not tested; 3.12 is.
 * **PyMuPDF** is blocked by an Application Control policy on one development computer, so three Member 1 tests fail there. They run in CI.

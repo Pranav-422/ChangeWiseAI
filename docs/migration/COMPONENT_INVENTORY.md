@@ -28,11 +28,16 @@ No file of Member 1 or Member 2 was changed.
 | `backend/tests` | API, security, database, parity, Gemini SDK |
 | `supabase/migrations` | 5 versioned migrations; `tests/local_stub.sql` for a plain PostgreSQL |
 | `scripts/migration` | baseline capture, backup, export, import, verification, rollback notes |
+| `scripts/deploy` | `setup_cloud`: asks for the secrets, applies migrations, loads and verifies data, stores the secrets in Vercel |
 | `scripts/dev` | local stack, Supabase stand-in (never deployed), CI seed and checks |
 | `frontend/components/ui` | buttons, fields, dialog, drawer, tabs, menu, tooltip, table, status, alert, empty, error, skeleton |
 | `frontend/components/*` | Revision Ribbon, Material Flow, Inventory charts, BOM Lineage, Decision Panel, Severity Rail, Audit Timeline, Explanation Panel, Robustness Matrix |
 | `shared/api-contracts` | OpenAPI document and contract |
-| `render.yaml`, `.github/workflows/ci.yml` | deployment and CI |
+| `index.py` | Vercel entrypoint of the API; re-exports `backend.app.main:app` |
+| `requirements.txt` | production dependencies of the API; replaced `backend/requirements.txt` |
+| `vercel.json`, `.vercelignore` | settings of `changewise-api` (region `bom1`); leaves out frontend, tests and docs |
+| `render.yaml` | untested alternative host for the API |
+| `.github/workflows/ci.yml` | CI |
 
 ## Kept for comparison
 

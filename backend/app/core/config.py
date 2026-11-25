@@ -14,7 +14,7 @@ class Settings:
     supabase_secret_key: str
     frontend_origins: tuple
     storage_bucket: str = "ecn-documents"
-    max_upload_bytes: int = 10 * 1024 * 1024
+    max_upload_bytes: int = 4 * 1024 * 1024  # a Vercel function accepts a body of 4.5 MB
     pool_size: int = 5
 
     @property

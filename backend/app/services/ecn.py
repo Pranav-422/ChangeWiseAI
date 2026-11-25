@@ -32,7 +32,7 @@ def _checked(filename, content):
     if not content:
         raise ApiError(422, "EMPTY_DOCUMENT", "The file is empty.")
     if len(content) > get_settings().max_upload_bytes:
-        raise ApiError(413, "TOO_LARGE", "The file is larger than 10 MB.")
+        raise ApiError(413, "TOO_LARGE", "The file is larger than 4 MB.")
     if suffix == ".pdf":
         if not content.startswith(b"%PDF-"):
             raise ApiError(415, "UNSUPPORTED_TYPE", "The file is not a PDF.")

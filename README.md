@@ -9,10 +9,11 @@ The engine calculates and decides. The AI interprets and explains. The planner a
 | `member1/` | Data, validation, BOM impact, weekly inventory simulation, severity |
 | `member2/` | Candidate plans, seven hard rules, lexicographic optimization, robustness, baselines |
 | `member3/` | ECN extraction, what-if parsing, verified explanations, workflow services, earlier Streamlit application |
-| `backend/` | FastAPI service that runs the three modules on PostgreSQL (Render) |
-| `frontend/` | Next.js application (Vercel) |
+| `backend/` | FastAPI service that runs the three modules on PostgreSQL (Vercel project `changewise-api`) |
+| `frontend/` | Next.js application (Vercel project `changewise-ai`) |
+| `index.py`, `requirements.txt`, `vercel.json`, `.vercelignore` | Vercel entrypoint, dependencies and settings of the API |
 | `supabase/` | Versioned PostgreSQL migrations, RLS, storage |
-| `scripts/` | Data migration, parity checks, local stack |
+| `scripts/` | Data migration, parity checks, local stack, cloud setup |
 | `shared/api-contracts/` | OpenAPI contract |
 | `docs/migration/` | Audit, design system, reports, deployment guide |
 

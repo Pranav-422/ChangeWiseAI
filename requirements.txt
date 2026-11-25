@@ -1,4 +1,4 @@
-# Production dependencies of the API on Render. Streamlit and plotting stay out of this image.
+# Production dependencies of the API. Streamlit and plotting stay out of this image.
 fastapi==0.165.0
 uvicorn==0.54.0
 pydantic==2.14.4

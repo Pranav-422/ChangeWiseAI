@@ -105,7 +105,7 @@ function Intake() {
               className={cx("drafting flex min-h-52 cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed bg-sheet p-6 text-center transition-colors focus-within:border-tech hover:border-tech", over ? "border-tech bg-tech-soft" : "border-line-strong")}>
               <Icon name={file ? "file" : "upload"} size={30} className="text-tech" />
               <span className="font-semibold">{file ? file.name : "Drop the ECN here, or choose a file"}</span>
-              <span className="text-sm text-ink-2">{file ? bytes(file.size) : "PDF with a text layer, or plain text. Up to 10 MB."}</span>
+              <span className="text-sm text-ink-2">{file ? bytes(file.size) : "PDF with a text layer, or plain text. Up to 4 MB."}</span>
               <input type="file" accept=".pdf,.txt,application/pdf,text/plain" className="sr-only" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
             </label>
             <Button kind="primary" className="w-full" disabled={!file} busy={busy} onClick={() => file && read(() => api.upload(change.change_id, scenario, file))}>Store and extract fields</Button>

@@ -30,7 +30,7 @@ def _same(column, expected, actual):
 
 def compare(url, content):
     results = []
-    with psycopg.connect(url, row_factory=dict_row) as conn:
+    with psycopg.connect(url, row_factory=dict_row, prepare_threshold=None) as conn:
         database._configure(conn)
         conn.execute("SET timezone TO 'UTC'")
         for source, table, target, key in MAPPING:

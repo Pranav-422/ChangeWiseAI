@@ -8,21 +8,14 @@ import os
 import sys
 import threading
 
-ROOT_BIN = None
-try:
-    from importlib.util import find_spec
-    from pathlib import Path
-    ROOT_BIN = Path(find_spec("pixeltable_pgserver").origin).parent / "pginstall" / "bin"
-    os.environ["PATH"] = f"{ROOT_BIN}{os.pathsep}{os.environ['PATH']}"  # psycopg finds libpq here
-except AttributeError:
-    sys.exit("pip install -r backend/requirements-dev.txt")
+from scripts import libpq  # noqa: F401  (must come before psycopg)
 
-import psycopg  # noqa: E402
-import uvicorn  # noqa: E402
-from psycopg import conninfo  # noqa: E402
+import psycopg  # isort: skip
+import uvicorn
+from psycopg import conninfo
 
-from . import local_postgres  # noqa: E402
-from .accounts import PASSWORD, USERS  # noqa: E402
+from . import local_postgres
+from .accounts import PASSWORD, USERS
 
 
 def prepare(name="changewise_dev"):

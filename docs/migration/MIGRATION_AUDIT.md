@@ -1,7 +1,7 @@
 # Migration audit
 
 State inspected: commit `d562da2` (`main`, pull requests 1 to 3 merged), 24 November 2026. Work branch:
-`migration/vercel-render-supabase-gemini`.
+`migration/vercel-render-supabase-gemini`. The branch name is older than the decision to host the API on Vercel instead of Render.
 
 ## Entry points before the migration
 
@@ -40,7 +40,14 @@ State inspected: commit `d562da2` (`main`, pull requests 1 to 3 merged), 24 Nove
 * `member3.database.connection` opened a SQLite path. It now accepts another store (`use()`); SQLite stays the default.
 * `member3.integration.member1_module` read CSV files. Its functions now accept tables.
 * ECN PDFs were read from `member1/documents/ecn_samples`. They remain there as samples; uploads go to Supabase Storage.
+  The upload limit is 4 MB, because a Vercel function accepts a request body of at most 4.5 MB.
 * Streamlit session state held the role and the selected scenario. Replaced by Supabase Auth and a browser preference.
+
+## Assumptions tied to one long-running process
+
+* The run cache and the connection pool are in process memory. On Vercel each function instance has its own.
+* Writers were serialised by SQLite. An advisory lock in PostgreSQL serialises them now, across instances.
+* Database code is transaction-local, so it works behind the Supabase transaction pooler.
 
 ## Generated data
 
