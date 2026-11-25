@@ -4,6 +4,23 @@ Engineering change intelligence and phase-in/phase-out control. Team TG10, TECHg
 
 The engine calculates and decides. The AI interprets and explains. The planner approves.
 
+## Live deployment
+
+| Part | Link |
+|---|---|
+| Application | https://changewise-ai.vercel.app |
+| API | https://changewise-api.vercel.app ([health](https://changewise-api.vercel.app/health), [readiness](https://changewise-api.vercel.app/ready)) |
+
+Sign in with an account, or choose **Continue as guest**: a guest can view the planning data and change nothing.
+
+Status on 25 November 2026: both parts are online. The hosted database is not loaded and guest access is not yet switched
+on in Supabase, so the pages after sign-in have no data. Readiness shows `"status":"ready"` when that is finished.
+
+Next.js on Vercel, FastAPI on Vercel, PostgreSQL, Auth and Storage on Supabase (Mumbai), Gemini for text only. Without a
+Gemini key the application uses its own templates.
+
+## Repository
+
 | Folder | What it is |
 |---|---|
 | `member1/` | Data, validation, BOM impact, weekly inventory simulation, severity |
