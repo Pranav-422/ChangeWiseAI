@@ -57,8 +57,7 @@ def test_every_route_needs_a_token(client):
     lambda u: token(u, iss="https://evil.example/auth/v1"),
     lambda u: token(u, aud="anon"),
     lambda u: token(u, key=ec.generate_private_key(ec.SECP256R1())),
-    lambda u: token(u, is_anonymous=True),
-], ids=["garbage", "hs256", "none", "expired", "issuer", "audience", "other-key", "anonymous"])
+], ids=["garbage", "hs256", "none", "expired", "issuer", "audience", "other-key"])
 def test_bad_tokens_are_refused(client, db, make):
     user_id = add_user(db, "ADMIN", "Admin")
     response = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {make(user_id)}"})
@@ -69,6 +68,20 @@ def test_unknown_and_inactive_accounts_have_no_access(client, db):
     for user_id in ("00000000-0000-0000-0000-000000000001", add_user(db, "ADMIN", "Gone", active=False)):
         response = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token(user_id)}"})
         assert (response.status_code, response.json()["error"]["code"]) == (403, "NO_ACCESS")
+
+
+def test_a_guest_is_only_ever_a_viewer(client, db, users):
+    guest = str(db.execute("INSERT INTO auth.users (email) VALUES (NULL) RETURNING id").fetchone()[0])
+    headers = {"Authorization": f"Bearer {token(guest, is_anonymous=True)}"}
+    db.execute("UPDATE app.user_profiles SET role = 'ADMIN' WHERE user_id = %s", [guest])
+    me = client.get("/api/v1/auth/me", headers=headers).json()
+    assert (me["name"], me["role"], me["permissions"]) == ("Guest", "VIEWER", ["VIEW"])
+    assert client.get("/api/v1/changes", headers=headers).status_code == 200
+    assert client.get("/api/v1/admin/users", headers=headers).status_code == 403
+    assert client.post("/api/v1/planning/optimize", headers=headers, json={"review_id": "x"}).status_code == 403
+    admin = users["ADMIN"]
+    assert guest not in str(admin.call("GET", "/admin/users"))
+    assert admin.error("PATCH", f"/admin/users/{guest}", {"role": "ADMIN"}) == (404, "NOT_FOUND")
 
 
 def test_role_comes_from_the_database_not_the_token(client, db):

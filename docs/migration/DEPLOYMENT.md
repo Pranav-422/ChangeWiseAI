@@ -21,6 +21,8 @@ The project `changewise` exists. It is empty until you run the setup script.
 3. Project Settings > API keys: note the publishable key and a secret key (`sb_secret_...`). Settings > JWT keys must show an asymmetric
    key (ES256), which is the default of new projects. The backend refuses HS256 tokens.
 4. Authentication > Providers > Email: on, confirm email on, minimum password length 8.
+   Authentication > Sign In / Providers: allow anonymous sign-ins on. It is the "Continue as guest" button;
+   a guest is always a viewer.
 5. Storage needs no step: the migration creates the private bucket `ecn-documents` and its policy. The bucket limit is 10 MiB.
 
 ## 2. Run the setup script

@@ -33,13 +33,15 @@ def create(base_url, database_url):
 
     def user_json(user_id, email):
         now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        return {"id": str(user_id), "aud": "authenticated", "role": "authenticated", "email": email, "app_metadata": {},
+        return {"id": str(user_id), "aud": "authenticated", "role": "authenticated", "email": email,
+                "is_anonymous": not email, "app_metadata": {},
                 "user_metadata": {}, "identities": [], "created_at": now, "updated_at": now, "email_confirmed_at": now}
 
     def session(user_id, email):
         now = int(time.time())
         token = jwt.encode({"sub": str(user_id), "email": email, "aud": "authenticated", "role": "authenticated",
-                            "iss": f"{base_url}/auth/v1", "iat": now, "exp": now + 3600, "session_id": str(uuid.uuid4())},
+                            "iss": f"{base_url}/auth/v1", "iat": now, "exp": now + 3600, "session_id": str(uuid.uuid4()),
+                            "is_anonymous": not email},
                            key, algorithm="ES256", headers={"kid": kid})
         renew = secrets.token_hex(12)
         refresh[renew] = (user_id, email)
@@ -65,6 +67,8 @@ def create(base_url, database_url):
     @app.post("/auth/v1/signup")
     async def signup(request: Request):
         body = await request.json()
+        if not body.get("email"):  # a guest
+            return session(query("INSERT INTO auth.users (email) VALUES (NULL) RETURNING id")[0], "")
         if len(body.get("password", "")) < 8:
             return fail(422, "weak_password", "Password should be at least 8 characters.")
         if query("SELECT 1 FROM auth.users WHERE email = %s", body["email"]):

@@ -47,6 +47,20 @@ test("a new account starts as a viewer, whatever it sends", async ({ page }) => 
   await expect(page.getByRole("link", { name: "Audit history" })).toHaveCount(0);
 });
 
+test("a guest enters without an account and only views", async ({ page }) => {
+  await page.goto("/login?next=/inventory");
+  await page.getByRole("button", { name: "Continue as guest" }).click();
+  await expect(page).toHaveURL(/:\d+\/inventory$/);
+  await page.reload();
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.goto("/settings");
+  await expect(page.getByRole("main").getByText("Viewer", { exact: true })).toBeVisible();
+  await expect(page.getByText("None, guest session")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Change password" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Audit history" })).toHaveCount(0);
+  await signOut(page);
+});
+
 test("password reset by e-mail link", async ({ page, request }) => {
   test.skip(!!process.env.E2E_REAL_SUPABASE, "the real stack delivers the link by mail; see 5-real-supabase.spec.ts");
   const address = `reset-${Date.now()}@changewise.test`;

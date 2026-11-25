@@ -9,6 +9,8 @@ const MESSAGES: Record<string, string> = {
   user_already_exists: "An account with this email already exists.",
   weak_password: "Choose a longer password, at least 8 characters.",
   over_email_send_rate_limit: "Too many emails were requested. Wait a few minutes.",
+  anonymous_provider_disabled: "Guest access is switched off. Sign in with an account.",
+  over_request_rate_limit: "Too many attempts. Wait a few minutes.",
   same_password: "Choose a password you have not used before.",
 };
 export const authMessage = (error: { code?: string; message: string }) => MESSAGES[error.code ?? ""] ?? error.message;

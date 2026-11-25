@@ -51,8 +51,6 @@ def verify_token(token):
         raise ApiError(503, "AUTH_UNAVAILABLE", "The sign-in service cannot be reached.") from error
     except (jwt.PyJWTError, ValueError) as error:
         raise denied from error
-    if claims.get("is_anonymous"):
-        raise denied
     return claims
 
 
@@ -67,7 +65,9 @@ def current_user(request: Request,
     if not profile or not profile["is_active"]:
         raise ApiError(403, "NO_ACCESS", "This account has no access. Ask an administrator.")
     request.state.user_id = claims["sub"]
-    return Principal(claims["sub"], profile["email"], profile["full_name"] or profile["email"], profile["role"])
+    # A guest session is never more than a viewer, whatever its profile says.
+    role = "VIEWER" if claims.get("is_anonymous") else profile["role"]
+    return Principal(claims["sub"], profile["email"], profile["full_name"] or profile["email"] or "Guest", role)
 
 
 def needs(permission):

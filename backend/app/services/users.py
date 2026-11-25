@@ -11,13 +11,15 @@ _COLUMNS = "user_id, email, full_name, role, is_active, created_at, updated_at"
 def list_users(user):
     require(user, "MANAGE_USERS")
     with read() as db:
-        return db.execute(f"SELECT {_COLUMNS} FROM user_profiles ORDER BY created_at, email").fetchall()
+        return db.execute(f"SELECT {_COLUMNS} FROM user_profiles WHERE email <> '' ORDER BY created_at, email").fetchall()
 
 
 def update(user_id, role, is_active, user):
     require(user, "MANAGE_USERS")
     with acting(user.user_id), transaction() as db:
-        before = db.execute(f"SELECT {_COLUMNS} FROM user_profiles WHERE user_id::text = ?", [user_id]).fetchone()
+        # no e-mail: a guest session, which cannot be given a role
+        before = db.execute(f"SELECT {_COLUMNS} FROM user_profiles WHERE user_id::text = ? AND email <> ''",
+                            [user_id]).fetchone()
         if before is None:
             raise not_found("User")
         after = {"role": role or before["role"], "is_active": before["is_active"] if is_active is None else is_active}

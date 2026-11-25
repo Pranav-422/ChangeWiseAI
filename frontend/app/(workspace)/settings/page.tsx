@@ -34,11 +34,11 @@ function Profile() {
         {error && <ErrorNote error={error} />}
         <div className="max-w-md space-y-4">
           <Input label="Name shown in decisions and audit events" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} hint="Earlier records keep the name they were written with." />
-          <div className="flex flex-wrap gap-2"><Button kind="primary" disabled={!name.trim() || name === me.name} busy={!!pending} onClick={() => run("rename", () => api.rename(name))}>Save</Button><LinkButton href="/update-password">Change password</LinkButton><Button icon="exit" onClick={signOut}>Sign out</Button></div>
+          <div className="flex flex-wrap gap-2"><Button kind="primary" disabled={!name.trim() || name === me.name} busy={!!pending} onClick={() => run("rename", () => api.rename(name))}>Save</Button>{me.email && <LinkButton href="/update-password">Change password</LinkButton>}<Button icon="exit" onClick={signOut}>Sign out</Button></div>
         </div>
       </Section>
       <Section title="Access">
-        <Facts columns={1} items={[["Email", me.email], ["Role", roleName(me.role)], ["You may", me.permissions.map((p) => words(p).toLowerCase()).join(", ")]]} />
+        <Facts columns={1} items={[["Email", me.email || "None, guest session"], ["Role", roleName(me.role)], ["You may", me.permissions.map((p) => words(p).toLowerCase()).join(", ")]]} />
       </Section>
     </div>
   );

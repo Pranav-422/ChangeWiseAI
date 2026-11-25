@@ -41,7 +41,7 @@ export function TitleBlock({ onMenu }: { onMenu: () => void }) {
         </nav>
         <QuickJump />
         <Menu label={<span className="flex min-h-10 items-center gap-2 rounded-sharp px-2 text-sm hover:bg-neutral-soft"><Icon name="user" size={18} /><span className="hidden max-w-40 truncate font-semibold md:block">{me.name}</span><Icon name="down" size={14} /></span>}>
-          <div className="border-b border-line px-3 py-2 text-sm"><p className="font-semibold">{me.name}</p><p className="text-ink-2">{me.email}</p><p className="text-ink-2">{roleName(me.role)}</p></div>
+          <div className="border-b border-line px-3 py-2 text-sm"><p className="font-semibold">{me.name}</p>{me.email && <p className="text-ink-2">{me.email}</p>}<p className="text-ink-2">{roleName(me.role)}</p></div>
           <Link href="/settings" className="flex min-h-10 items-center gap-2 px-3 text-sm hover:bg-sunken">Profile and settings</Link>
           <button type="button" onClick={signOut} className="flex min-h-10 w-full items-center gap-2 px-3 text-sm hover:bg-sunken"><Icon name="exit" />Sign out</button>
         </Menu>

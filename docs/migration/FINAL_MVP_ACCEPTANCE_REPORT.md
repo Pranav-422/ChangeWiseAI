@@ -48,7 +48,7 @@ project, the Render service, and a Gemini key. Steps: `DEPLOYMENT.md`.
 | Render URL | **BLOCKED**: not deployed |
 | `/health`, `/ready` | pass locally and in CI in production mode |
 | Routes | 55 operations; every protected one refuses a missing token |
-| Token verification | ES256/RS256 by JWKS, issuer, audience, expiry; HS256, `none`, anonymous, other key refused |
+| Token verification | ES256/RS256 by JWKS, issuer, audience, expiry; HS256, `none`, other key refused; a guest (anonymous) token is always a viewer |
 | Production SQLite dependency | none |
 
 ## Frontend
