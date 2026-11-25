@@ -107,8 +107,14 @@ Document:
 >>>"""
 
 
+_PROPOSALS = {"type": "array", "items": {"type": "object", "required": ["value", "quote"], "properties": {
+    "value": {"type": "string"}, "quote": {"type": "string"}}}}
+_SCHEMA = {"type": "object", "required": ["fields"], "properties": {"fields": {
+    "type": "object", "properties": {f: _PROPOSALS for f in FIELDS}}}}
+
+
 def _llm_candidates(text, provider):
-    reply = provider.complete_json(_PROMPT.format(fields=", ".join(FIELDS), document=text))
+    reply = provider.complete_json(_PROMPT.format(fields=", ".join(FIELDS), document=text), _SCHEMA)
     if not isinstance(reply.get("fields"), dict):
         raise ProviderError("response has no 'fields' object")
     return reply

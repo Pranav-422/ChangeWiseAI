@@ -19,9 +19,13 @@ def _text(sections):
     return "\n".join(sections.values())
 
 
+_SCHEMA = {"type": "object", "required": ["sections"], "properties": {"sections": {
+    "type": "object", "required": list(SECTIONS), "properties": {t: {"type": "string"} for t in SECTIONS}}}}
+
+
 def _llm_sections(facts, provider):
     titles = ", ".join(f'"{t}": ""' for t in SECTIONS)
-    reply = provider.complete_json(_PROMPT.format(sections=titles, facts=json.dumps(facts, ensure_ascii=False)))
+    reply = provider.complete_json(_PROMPT.format(sections=titles, facts=json.dumps(facts, ensure_ascii=False)), _SCHEMA)
     sections = reply.get("sections")
     if (not isinstance(sections, dict) or not set(sections) <= set(SECTIONS)
             or not all(isinstance(v, str) for v in sections.values()) or not _text(sections).strip()):

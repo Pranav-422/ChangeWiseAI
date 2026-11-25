@@ -18,9 +18,13 @@ def sample_documents():
             for path in sorted((MEMBER1_ROOT / "documents" / "ecn_samples").glob("*.pdf"))]
 
 
-def validate_ecn(fields, dataset):
+def load_tables():
+    return load_csv_data()
+
+
+def validate_ecn(fields, dataset, tables=None):
     """Member 1's own ECN validation, plus the new material the document does not name."""
-    tables = load_csv_data()
+    tables = tables or load_tables()
     old = dataset["engineering_change"]["old_material_id"]
     new = dataset["engineering_change"]["new_material_id"]
     change = {"change_id": fields["change_id"], "part_number": fields["part_number"],
@@ -34,8 +38,8 @@ def validate_ecn(fields, dataset):
             for i in found if i["status"] != "VALID"]
 
 
-def bom_impact(material_id):
-    tables = load_csv_data()
+def bom_impact(material_id, tables=None):
+    tables = tables or load_tables()
     report = generate_bom_impact_report(material_id, tables["bom"], tables["materials"])
     return {"material_id": material_id, "direct_parents": report["direct_parents"],
             "indirect_parents": report["indirect_parents"],

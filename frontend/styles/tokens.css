@@ -1,0 +1,65 @@
+/* Design tokens of the Engineering Transition Console. Components use these names, never raw values. */
+@theme {
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Barlow", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Structure */
+  --color-navy-950: #0a1420;
+  --color-navy-900: #0e1c2d;
+  --color-navy-800: #16293f;
+  --color-navy-700: #24405f;
+  --color-navy-300: #9fb3c8;
+  --color-navy-100: #d8e2ec;
+  --color-canvas: #efede5;
+  --color-sheet: #fbfaf6;
+  --color-sunken: #f5f3ec;
+  --color-line: #d9d5c8;
+  --color-line-strong: #a9a493;
+
+  /* Text */
+  --color-ink: #17212b;
+  --color-ink-2: #46515c;
+  --color-ink-3: #616b75;
+
+  /* Active engineering operations */
+  --color-tech: #08708f;
+  --color-tech-strong: #065a74;
+  --color-tech-soft: #dceff4;
+  --color-signal: #3ccbee;
+
+  /* Revisions: the old one always bronze, the new one always cyan */
+  --color-rev-old: #9a5b2e;
+  --color-rev-old-soft: #f0e2d5;
+  --color-rev-old-ink: #7d4822;   /* text on rev-old-soft */
+  --color-rev-new: #0a86a8;
+  --color-rev-new-soft: #d9eef4;
+
+  /* States. Used only when the state justifies it, always with an icon and a word. */
+  --color-critical: #a8261d;
+  --color-critical-soft: #f7e1de;
+  --color-high: #b0480c;
+  --color-high-soft: #f9e5d8;
+  --color-pending: #8a5a00;
+  --color-pending-soft: #f8ecd0;
+  --color-pending-mark: #d99a00;
+  --color-done: #2b6e47;
+  --color-done-soft: #deeee4;
+  --color-neutral-soft: #e7e4da;
+
+  --radius-sharp: 2px;
+  --radius-soft: 4px;
+  --shadow-drawer: 0 0 0 1px rgb(10 20 32 / 8%), 0 24px 60px rgb(10 20 32 / 28%);
+  --shadow-menu: 0 0 0 1px rgb(10 20 32 / 10%), 0 12px 28px rgb(10 20 32 / 18%);
+
+  --ease-transition: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --animate-enter: enter 260ms var(--ease-transition) both;
+  --animate-pulse-line: pulse-line 1.6s ease-in-out infinite;
+
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(6px); }
+  }
+  @keyframes pulse-line {
+    50% { opacity: 0.45; }
+  }
+}

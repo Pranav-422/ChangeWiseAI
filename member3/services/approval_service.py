@@ -50,8 +50,11 @@ def _comment_needed(run, plan_id, modified):
     return None
 
 
-def decide(run_id, decision, user, member1, member2, comment="", plan_id=None, modified_actions=None):
-    """APPROVED needs a plan_id from the top plans or modified_actions; REJECTED needs a comment."""
+def decide(run_id, decision, user, member1, member2, comment="", plan_id=None, modified_actions=None, on_stored=None):
+    """APPROVED needs a plan_id from the top plans or modified_actions; REJECTED needs a comment.
+
+    `on_stored(db, approval_id, plan)` runs inside the transaction of an approval.
+    """
     require(user, "DECIDE_PLAN")
     comment = comment.strip()
     with transaction() as db:
@@ -85,13 +88,15 @@ def decide(run_id, decision, user, member1, member2, comment="", plan_id=None, m
     try:
         with transaction() as db:
             records.insert(db, "approvals", approval_id=approval_id, run_id=run_id, decision=decision,
-                           modified=int(modified_actions is not None), plan=plan, comment=comment,
+                           modified=modified_actions is not None, plan=plan, comment=comment,
                            user_name=user.name, role=user.role, created_at=records.now())
             audit_service.append(db, f"PLAN_{decision}", run_id, user, {
                 "approval_id": approval_id, "plan_id": plan and plan["plan_id"],
                 "modified": modified_actions is not None, "comment": comment})
             if plan:
                 action_tracker_service.create_items(db, approval_id, run_id, plan, user)
+                if on_stored:
+                    on_stored(db, approval_id, plan)
     except sqlite3.IntegrityError as error:
         raise DecisionRefused("This run already has a final decision.") from error
     return approval_id

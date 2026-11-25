@@ -1,0 +1,6 @@
+* text=auto
+*.sh text eol=lf
+*.sql text eol=lf
+docs/migration/baseline/* text eol=lf
+shared/api-contracts/* text eol=lf
+frontend/types/api.ts text eol=lf

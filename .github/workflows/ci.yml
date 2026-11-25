@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "migration/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# No production secret is used here: every service is local to the job.
+jobs:
+  member1:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: member1/requirements.txt }
+      - run: pip install -r member1/requirements.txt
+      - run: pytest -q
+        working-directory: member1
+
+  member2-member3:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: member3/requirements.txt }
+      - run: pip install -r member3/requirements.txt
+      - run: pytest -q member2 member3
+
+  backend:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12.10", cache: pip, cache-dependency-path: requirements.txt }
+      - run: pip install -r requirements.txt pytest ruff
+      - run: ruff check backend scripts
+      - run: pytest -q backend
+      - name: Frozen baseline still holds on the CSV data
+        run: python -m scripts.migration.capture_baseline --check member3.integration.member1_module
+      - name: API contract is up to date
+        run: python -m scripts.export_openapi && git diff --exit-code shared/api-contracts
+
+  frontend:
+    runs-on: ubuntu-24.04
+    defaults: { run: { working-directory: frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run types && git diff --exit-code types/api.ts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+        env: { NEXT_PUBLIC_SUPABASE_URL: "http://localhost:54321", NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci, NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000" }
+
+  # The real Supabase stack: PostgreSQL, Auth and Storage as the hosted project runs them.
+  e2e-supabase:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12.10", cache: pip, cache-dependency-path: requirements.txt }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: npm install --global supabase@3.4.0
+      - run: pip install -r requirements.txt
+      - name: Start Supabase with asymmetric signing keys
+        run: |
+          python - <<'EOF'
+          import json, uuid
+          from cryptography.hazmat.primitives.asymmetric import ec
+          from jwt.algorithms import ECAlgorithm
+          key = ECAlgorithm.to_jwk(ec.generate_private_key(ec.SECP256R1()), as_dict=True)
+          key.update(kid=str(uuid.uuid4()), alg="ES256", use="sig", key_ops=["sign", "verify"], ext=True)
+          json.dump([key], open("supabase/signing_keys.json", "w"))
+          EOF
+          supabase start
+          supabase status -o json > status.json
+          python - <<'EOF' >> "$GITHUB_ENV"
+          import json
+          status = json.load(open("status.json"))
+          pick = lambda *names: next(status[n] for n in names if status.get(n))
+          print("DATABASE_URL=" + pick("DB_URL"))
+          print("SUPABASE_URL=" + pick("API_URL"))
+          print("SUPABASE_PUBLISHABLE_KEY=" + pick("PUBLISHABLE_KEY", "ANON_KEY"))
+          print("SUPABASE_SECRET_KEY=" + pick("SECRET_KEY", "SERVICE_ROLE_KEY"))
+          print("NEXT_PUBLIC_SUPABASE_URL=" + pick("API_URL"))
+          print("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=" + pick("PUBLISHABLE_KEY", "ANON_KEY"))
+          EOF
+          echo "NEXT_PUBLIC_API_BASE_URL=http://localhost:8000" >> "$GITHUB_ENV"
+      - run: python -m scripts.dev.seed_supabase
+      - name: Verify the migrated data value by value
+        run: |
+          python -m scripts.migration.verify_migration "$(ls -d backups/*/ | tail -1)export.json" --where "local Supabase stack in CI"
+      - name: Start the API
+        env: { FRONTEND_ORIGIN: "http://localhost:3000", ENVIRONMENT: production }
+        run: |
+          nohup uvicorn backend.app.main:app --port 8000 --no-access-log > api.log 2>&1 &
+          for i in $(seq 30); do curl -sf localhost:8000/ready && break; sleep 1; done
+      - name: Build and start the frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+          nohup npm start > ../web.log 2>&1 &
+          for i in $(seq 30); do curl -sf localhost:3000/login > /dev/null && break; sleep 1; done
+          npx playwright install --with-deps chromium
+      - run: npx playwright test
+        working-directory: frontend
+        env: { E2E_REAL_SUPABASE: "1" }
+      - name: RLS, roles and storage on the real stack
+        if: always()
+        run: python -m scripts.dev.check_supabase
+      - name: Logs
+        if: failure()
+        run: tail -60 api.log; tail -20 web.log
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: frontend/playwright-report }
