@@ -1,47 +1,74 @@
-"""One-time cloud setup, run by the owner in a private terminal: python -m scripts.deploy.setup_cloud
+"""One-time cloud setup, run by the owner: python -m scripts.deploy.setup_cloud
 
-Asks for the secrets with hidden input, prepares the database, and stores the secrets as production variables of the
+Asks for the secrets in a window with masked fields, prepares the database, and stores the secrets as production variables of the
 Vercel project this folder is linked to. Nothing secret is printed or written to a file. Safe to repeat.
 """
 import json
 import shutil
 import subprocess
 import sys
-from getpass import getpass
-from urllib.parse import urlsplit
+import tkinter
+from urllib.parse import quote
 
 from scripts import libpq  # noqa: F401  (must come before psycopg)
+import psycopg
 
 from scripts.migration import apply_migrations, export_sqlite, import_postgres, verify_migration
 from scripts.migration.backup_sources import backup
 from scripts.migration.common import ROOT
 
 PROJECT_REF = "feocfauwwjgbugbqakhi"
+POOLER = "aws-0-ap-south-1.pooler.supabase.com:6543"  # transaction pooler, Mumbai
 
 
-def check_database_url(url):
-    """The problem with a pasted connection string, or None."""
-    if "[" in url or "]" in url:  # also what urlsplit refuses to parse
-        return "Replace [YOUR-PASSWORD], brackets included, with the database password."
-    parts = urlsplit(url)
-    if parts.scheme not in ("postgresql", "postgres"):
-        return "It must start with postgresql://"
-    if not parts.password:
-        return "The database password is missing."
-    if PROJECT_REF not in f"{parts.username}{parts.hostname}":
-        return f"It is not the connection string of project {PROJECT_REF}."
-    if not (parts.hostname or "").endswith("pooler.supabase.com"):
-        return "Use the pooler connection string; the direct one is IPv6 only."
+def database_url(password):
+    return f"postgresql://postgres.{PROJECT_REF}:{quote(password, safe='')}@{POOLER}/postgres?sslmode=require"
+
+
+def problem(password, secret):
+    """What is wrong with the two required answers, or None. Tries the password on the database."""
+    if not password:
+        return "Enter the database password."
+    if not secret.startswith("sb_secret_"):
+        return "The secret key must start with sb_secret_"
+    try:
+        psycopg.connect(database_url(password), connect_timeout=15).close()
+    except psycopg.Error as error:
+        return "The database password is wrong." if "password authentication" in str(error) else "The database cannot be reached."
     return None
 
 
-def ask(prompt, problem):
-    while True:
-        value = getpass(prompt).strip()
-        wrong = problem(value)
-        if wrong is None:
-            return value
-        print(wrong)
+def ask():
+    """(password, secret key, Gemini key), or exit when the window is closed."""
+    window = tkinter.Tk()
+    window.title("ChangeWise cloud setup")
+    window.attributes("-topmost", True)
+    fields = []
+    for label in ("Database password", "Supabase secret key (sb_secret_...)", "Gemini API key (optional)"):
+        tkinter.Label(window, text=label, anchor="w").pack(fill="x", padx=20, pady=(12, 2))
+        entry = tkinter.Entry(window, show="*", width=60)
+        entry.pack(padx=20)
+        fields.append(entry)
+    message = tkinter.Label(window, fg="#b00020")
+    message.pack(pady=8)
+    answers = []
+
+    def submit(_event=None):
+        values = [field.get().strip() for field in fields]
+        message.config(text="Checking...")
+        window.update()
+        wrong = problem(values[0], values[1])
+        if wrong:
+            message.config(text=wrong)
+        else:
+            answers.extend(values)
+            window.destroy()
+
+    tkinter.Button(window, text="Continue", command=submit).pack(pady=(0, 16))
+    window.bind("<Return>", submit)
+    fields[0].focus_force()
+    window.mainloop()
+    return answers or sys.exit("Closed without answers.")
 
 
 def store(name, value):
@@ -53,10 +80,8 @@ def store(name, value):
 
 
 def main():
-    url = ask("Transaction pooler string (hidden): ", check_database_url)
-    secret = ask("Supabase secret key sb_secret_... (hidden): ",
-                 lambda v: None if v.startswith("sb_secret_") else "It must start with sb_secret_")
-    gemini = getpass("Gemini API key, or Enter to skip (hidden): ").strip()
+    password, secret, gemini = ask()
+    url = database_url(password)
     print("Migrations:", ", ".join(apply_migrations.apply(url)) or "nothing to apply")
     content = json.loads(export_sqlite.export(backup()).read_text(encoding="utf-8"))
     report = import_postgres.load(url, content)

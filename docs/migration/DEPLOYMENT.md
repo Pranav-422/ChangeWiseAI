@@ -34,11 +34,11 @@ Run it in your own terminal, in the repository root. The Vercel CLI must be sign
 .venv\Scripts\python -m scripts.deploy.setup_cloud
 ```
 
-The script asks for three values. The input is hidden.
+A window asks for three values. The fields are masked.
 
 | Value | Where it comes from |
 |---|---|
-| Database connection string | transaction pooler string, section 1, step 2 |
+| Database password | section 1, step 2 |
 | Supabase secret key | `sb_secret_...`, section 1, step 3 |
 | Gemini key | optional |
 
